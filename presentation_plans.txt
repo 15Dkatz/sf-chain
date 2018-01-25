@@ -1,0 +1,5 @@
+* Have a demo in the beginning to show off the capabilities.
+* Extend to a Node AND React app <-- expose a frontend to the API.
+* Dockerize the app eventually.
+* Harder Proof of Work algorithms?
+* Extend these concepts to explanation videos.
