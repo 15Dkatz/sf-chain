@@ -3,3 +3,4 @@
 * Dockerize the app eventually.
 * Harder Proof of Work algorithms?
 * Extend these concepts to explanation videos.
+* Explain the inspiration from https://github.com/dvf/blockchain/blob/master/blockchain.py, and then I implemented it in JS

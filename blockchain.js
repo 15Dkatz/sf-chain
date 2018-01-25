@@ -22,14 +22,38 @@ block = {
 
 */
 
+class Block {
+  // TODO: is there a good way to do the proof and previousHash?
+  constructor(chain, currentTransactions, proof, previousHash) {
+    this.index = length(chain) + 1;
+    // this.timestamp = TODO: timestamp function,
+    this.transactions = currentTransactions;
+    this.proof = proof;
+    this.previousHash = previousHash;
+  }
+}
+
+
 class Blockchain {
   constructor() {
     this.chain = [];
     this.currentTransactions = []
+
+    // create the first block
+    // first hash is 1, first proof is 100
+    this.newBlock('1', 100);
   }
 
-  newBlock() {
+  newBlock(previousHash, proof) {
     console.log('Create a new block and add it to the chain');
+
+    block = new Block(this.chain, this.currentTransactions, proof, previousHash);
+
+    // Reset the current list of transactions
+    this.currentTransactions = [];
+    this.chain.append(block);
+
+    return block;
   }
 
   newTransaction() {
