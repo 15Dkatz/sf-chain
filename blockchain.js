@@ -1,38 +1,22 @@
-// a block object:
-
 // Object-Oriented
-// TODO: does it make sense to have a Block, and Transaction class too?
 // TODO: what about a sender, and recipient class for that matter?
-/*
-
-block = {
-  index: 1,
-  timestamp: 159546205.9994
-  transactions: [
-    {
-      sender: '1321239490as0148a',
-      recipient: '12084h408hjkkk',
-      amount: 5
-    }
-  ],
-  proof: 234823805005000,
-  previous_hash: '2391201480124801240'
-}
-*/
 
 // TODO: get a better grasp of the proof and previousHash
 
+// TODO docs on the class, etc.
+// timestamp: the number of milliseconds since 1 January, 1970, 00:00:00
 class Block {
   // TODO: is there a good way to do the proof and previousHash?
-  constructor(/*chain, */proof, previousHash) {
-    // TODO: is the chain and index part necessary?
+  constructor(/*proof, previousHash*/) {
+    // TODO: is the index part necessary
     // this.index = length(chain) + 1;
-    // TODO: better timestamp than new Date();
-    this.timestamp = new Date();
+    this.timestamp = Date.now();
     this.currentTransactions = [];
     // TODO: does this belong here?
+    /*
     this.proof = proof;
     this.previousHash = previousHash;
+    */
   }
 
 
@@ -101,14 +85,15 @@ class Blockchain {
   }
 }
 
-// TODO: use nodemon to have the dev experience be more efficient
-// TODO: what is a useful way to test this. Start the API? <-- yeah probably
-// TODO: Make a React frontend - BUILD A BLOCKCHAIN WITH NODE AND REACT
+// TODO: what is a useful way to test this. API?
 // Testing:
 let bc = new Blockchain();
 bc.lastBlock().newTransaction('foo', 'bar', 5);
-bc.newBlock();
-console.log(bc.toString());
+setTimeout(() => {
+  bc.newBlock();
+  console.log(bc.toString());
+}, 2000);
+
 
 // TODO create functions to print what's going in the blockchain - printTransactions, printBlocks, etc.
 
