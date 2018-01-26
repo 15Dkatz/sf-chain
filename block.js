@@ -4,6 +4,7 @@ const SHA256 = require('crypto-js/sha256');
 class Block {
   constructor(timestamp, lastHash, hash, data) {
     // TODO: is the index part necessary?
+    // yes the index is necessary to check additions of new blocks from multiple decentralized peers
     this.timestamp = timestamp;
     // the hash enforces the chain
     // each hash for each block is generated based off the lastHash.

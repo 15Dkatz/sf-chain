@@ -14,6 +14,8 @@ since it's my own implementation. It won't match how Bitcoin does it. I can safe
 bet that it will be super simplified. But it gets the idea across.
 
 TODO:
+* add the express api
+* write a script that starts multiple connections on different ports
 * add nodes through p2p connections made through express and websockets as inpsired by https://github.com/lhartikk/naivecoin/blob/chapter1/src/p2p.ts
 * add nodes to the blockchain for decentralization
 * replace log tests with a Jest test suite and runner
