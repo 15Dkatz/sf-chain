@@ -93,7 +93,3 @@ setTimeout(() => {
   bc.newBlock();
   console.log(bc.toString());
 }, 2000);
-
-
-// TODO create functions to print what's going in the blockchain - printTransactions, printBlocks, etc.
-

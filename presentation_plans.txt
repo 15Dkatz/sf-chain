@@ -4,3 +4,9 @@
 * Harder Proof of Work algorithms?
 * Extend these concepts to explanation videos.
 * Explain the inspiration from https://github.com/dvf/blockchain/blob/master/blockchain.py, and then I implemented it in JS
+
+* Add a transaction validation mechanism (cryptocurrency)
+TODO: This still doesn't have a transaction validation mechanism
+Can read about bitcoin and develop one though - this doesn't have to be accurate
+since it's my own implementation. It won't match how Bitcoin does it. I can safely
+bet that it will be super simplified. But it gets the idea across.
