@@ -5,27 +5,19 @@ const Block = require('./block');
 
 class Blockchain {
   constructor() {
-    this.chain = [];
-    // create the first block
-    // first hash is 1, first proof is 100
-    this.newBlock('1', 100);
+    // an array of Blocks | TODO, consider a Linked List?
+    this.chain = [Block.genesis()];
   }
 
-  newBlock(previousHash, proof) {
-    console.log('Create a new block and add it to the chain');
+  newBlock(data) {
+    const block = Block.newBlock(this.lastBlock(), data);
 
-    const block = new Block(this.chain, proof, previousHash);
-
-    // Reset the current list of transactions
-    // this.currentTransactions = [];
     this.chain.push(block);
 
     return block;
   }
 
-  // TODO: test
   lastBlock() {
-    console.log('Return the last Block in the chain')
     // This should return the last block in the chain
     return this.chain[this.chain.length-1];
   }
@@ -38,17 +30,11 @@ class Blockchain {
     });
     return string;
   }
-
-  static hash(block) {
-    console.log(`Hash this ${block}`)
-  }
 }
 
 // TODO: what is a useful way to test this. API?
 // Testing:
 let bc = new Blockchain();
-bc.lastBlock().newTransaction('foo', 'bar', 5);
-setTimeout(() => {
-  bc.newBlock();
-  console.log(bc.toString());
-}, 2000);
+bc.newBlock('foo');
+bc.newBlock('bar');
+console.log(bc.toString());

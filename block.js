@@ -1,43 +1,37 @@
-// TODO: get a better grasp of the proof and previousHash
+// TODO: figure out how to support imports
+const SHA256 = require('crypto-js/sha256');
 
-// TODO: place the block class into its own file
-// TODO docs on the class, etc.
-// timestamp: the number of milliseconds since 1 January, 1970, 00:00:00
 class Block {
-  // TODO: is there a good way to do the proof and previousHash?
-  constructor(/*proof, previousHash*/) {
-    // TODO: is the index part necessary
-    // this.index = length(chain) + 1;
-    this.timestamp = Date.now();
-    this.currentTransactions = [];
-    // TODO: does this belong here?
-    /*
-    this.proof = proof;
-    this.previousHash = previousHash;
-    */
-  }
-
-
-  /* TODO js-strings
-  sender - string address of the sender
-  recipient - string address of the recipient
-  amount - amount to send from the sender to recipient in the transaction
-  return - the index of the block that holds this transaction?
-  TODO: does this have to return anything?
-  */
-  newTransaction(sender, recipient, amount) {
-    console.log('Add a new transaction to the list of transactions');
-    // notice es6 destructuring syntax
-    this.currentTransactions.push({ sender, recipient, amount });
-    // return this.lastBlock('index') + 1;
+  constructor(timestamp, lastHash, hash, data) {
+    // TODO: is the index part necessary?
+    this.timestamp = timestamp;
+    // the hash enforces the chain
+    // each hash for each block is generated based off the lastHash.
+    // So if you change one block, you must change all following blocks as well
+    // A bad actor mess with one block individually, and pretend like everything will be fine
+    this.lastHash = lastHash;
+    this.hash = hash;
+    this.data = data;
   }
 
   toString() {
-    // TODO: better name than string
-    let string = `Block. Timestamp: ${this.timestamp}`;
+    return `Block -
+      Timestamp : ${this.timestamp}
+      Last Hash : ${this.lastHash.substring(0, 10)}
+      Hash      : ${this.hash.substring(0, 10)}
+      Data      : ${this.data}`;
+  }
 
-    // TODO: print current_transactions.
-    return string;
+  static genesis() {
+    return new this(Date.now(), '-----', 'first hash', 'genesis block');
+  }
+
+  static newBlock(lastBlock, data) {
+    const timestamp = Date.now();
+    // TODO: does this SHA256 function need a toString() call?
+    const nextHash = SHA256(`${timestamp}${lastBlock.hash}${data}`).toString();
+
+    return new this(timestamp, lastBlock.hash, nextHash, data);
   }
 }
 
