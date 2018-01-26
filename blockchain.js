@@ -62,7 +62,22 @@ class Blockchain {
     return true;
   }
 
-  // TODO: replaceChain function for node validation
+  /* replace the chain with this new one if it's:
+    a) valid
+    b) longer than the current chain
+  */
+  replaceChain(newChain) {
+    if (newChain.length <= this.chain) {
+      console.log('Received chain is not longer than the current chain.');
+      return;
+    } else if (!bc.isValidChain(newChain)) {
+      console.log('The received chain is not valid.');
+      return;
+    }
+
+    console.log('Replacing blockchain with the new chain.');
+    this.chain = newChain;
+  }
 
   // print the length of the chain, and call to String on every block in the chain
   toString() {
@@ -73,6 +88,8 @@ class Blockchain {
     return string;
   }
 }
+
+module.exports = Blockchain;
 
 // TODO: what is a useful way to test this. API?
 // Testing:
@@ -95,5 +112,18 @@ setTimeout(() => {
 
   // In presentation, let this print false first, and then make it valid after
   // successfully deep cloning the chain. Then re-corrupt it.
-  console.log(`Will a corrupt chain be valid: ${bc.isValidChain(corruptChain)}`)
+  console.log(`Will a corrupt chain be valid: ${bc.isValidChain(corruptChain)}`);
+  console.log('Will a corrupt chain replace the current chain: bc.replaceChain(corruptChain)');
+  bc.replaceChain(corruptChain);
+
+  let newValidChain = [];
+  for (let i=0; i<bc.chain.length; i++) {
+    newValidChain[i] = Object.create(bc.chain[i]);
+  }
+  newValidChain.push(Block.newBlock(newValidChain[newValidChain.length-1], 'goo'));
+
+  console.log('Will a new valid chain replace the block chain?');
+  bc.replaceChain(newValidChain);
+
+  console.log(bc.toString());
 }, 50);
