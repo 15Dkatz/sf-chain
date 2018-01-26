@@ -62,7 +62,7 @@ class Blockchain {
     return true;
   }
 
-  // TODO: replace chain function
+  // TODO: replaceChain function for node validation
 
   // print the length of the chain, and call to String on every block in the chain
   toString() {
