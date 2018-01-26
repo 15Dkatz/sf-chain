@@ -22,16 +22,25 @@ class Block {
       Data      : ${this.data}`;
   }
 
+  // Why static? Why not declare outside of the class?
+  // Nice to be able to share functionality under the Block namespace.
   static genesis() {
-    return new this(Date.now(), '-----', 'first hash', 'genesis block');
+    return new this(Date.now(), '-*-*-', 'first hash', 'genesis block');
   }
 
   static newBlock(lastBlock, data) {
     const timestamp = Date.now();
-    // TODO: does this SHA256 function need a toString() call?
-    const nextHash = SHA256(`${timestamp}${lastBlock.hash}${data}`).toString();
+    const hash = Block.hash(timestamp, lastBlock.hash, data);
 
-    return new this(timestamp, lastBlock.hash, nextHash, data);
+    return new this(timestamp, lastBlock.hash, hash, data);
+  }
+
+  static hash(timestamp, lastHash, data) {
+    return SHA256(`${timestamp}${lastHash}${data}`).toString();
+  }
+
+  static blockHash(block) {
+    return Block.hash(block.timestamp, block.lastHash, block.data);
   }
 }
 
