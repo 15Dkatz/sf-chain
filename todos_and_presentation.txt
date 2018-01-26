@@ -14,8 +14,16 @@ since it's my own implementation. It won't match how Bitcoin does it. I can safe
 bet that it will be super simplified. But it gets the idea across.
 
 TODO:
-* add the express api
-* write a script that starts multiple connections on different ports
-* add nodes through p2p connections made through express and websockets as inpsired by https://github.com/lhartikk/naivecoin/blob/chapter1/src/p2p.ts
-* add nodes to the blockchain for decentralization
 * replace log tests with a Jest test suite and runner
+
+
+
+#### P2P connection and chain-sync proof:
+one tab: `HTTP_PORT=3001 P2P_PORT=5001 npm run dev`
+x2-3: `http://localhost:3001/mine`
+another tab: `HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001pm run dev`
+Notice the syncage.
+Visit: `localhost:3002/blocks`
+Visit: `localhost:300`/blocks`
+Then add mine a new block: `http://localhost:3001/mine`
+Notice the syncage.
