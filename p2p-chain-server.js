@@ -1,20 +1,22 @@
 // TODO: read websocket docs for best practices cleanup
-
 // The peer to peer functionality must be developed after the api
+
+//!!! TODO: replace the "socket" terminology with ws to stay in accordance with https://github.com/websockets/ws
 
 const Websocket = require('ws');
 const P2P_PORT = process.env.P2P_PORT || 5001;
 const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
-class P2PServer {
-  constructor() {
+class P2PChainServer {
+  constructor(blockchain) {
     this.sockets = [];
+    this.blockchain = blockchain;
   }
 
   listen() {
     const server = new Websocket.Server({ port: P2P_PORT });
     server.on('connection', socket => this.connectSocket(socket));
-    this.connectToPeers(peers);
+    this.connectToPeers();
     console.log(`Listening for peer to peer connections on: ${P2P_PORT}`);
   }
 
@@ -23,14 +25,29 @@ class P2PServer {
     this.messageHandler(socket);
     // TODO: necessary to include?
     this.errorHandler(socket);
+    // is there a socket sendJson method?
+    this.sendChain(socket);
   }
 
-  // TODO: what will message handle exactly?
-  messageHandler(socket) {
-    socket.on('message', data => {
-      const message = JSON.parse(data);
+  sendChain(socket) {
+    /*
+      If there are more message types in the future, then use a redux-style action approach
+      where the sent object has a type field, like:
+      {
+        type: chain,
+        data: this.blockchain.chain
+      }
+    */
+    socket.send(JSON.stringify(this.blockchain.chain));
+  }
 
-      console.log(`Received socket message: ${message}.`);
+  messageHandler(socket) {
+    socket.on('message', message => {
+
+      const receivedChain = JSON.parse(message);
+      // attempt to replace the original chain with the received chain
+      // the built-in functionality will actually replace the chain securely
+      this.blockchain.replaceChain(receivedChain);
     });
   }
 
@@ -44,7 +61,7 @@ class P2PServer {
     socket.on('error', () => closeConnection(socket));
   }
 
-  connectToPeers(peers) {
+  connectToPeers() {
     peers.forEach(peer => {
       const socket = new Websocket(peer);
 
@@ -53,14 +70,9 @@ class P2PServer {
     });
   }
 
-  /*
-    TODO: create a function that syncs up all the chains on start up
-    Why would this be necessary?
-    Could you sync on add block?
-    Oh, what if you add a peer after the fact. For example, the chain is already 3 blocks long
-    then a new peer is connected and started
-    Then run a get of the blocks on all (3 or so) connections to check that the blocks are synced
-  */
+  syncChains() {
+    this.sockets.forEach(socket => this.sendChain(socket));
+  }
 }
 
-module.exports = P2PServer;
+module.exports = P2PChainServer;

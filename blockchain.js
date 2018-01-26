@@ -8,6 +8,7 @@ const Block = require('./block');
 class Blockchain {
   constructor() {
     // an array of Blocks | TODO, consider a Linked List?
+    // TODO: is this a bad construct/practice?
     this.genesisBlock = Block.genesis();
     this.chain = [this.genesisBlock];
   }
@@ -51,8 +52,7 @@ class Blockchain {
 
   // chain is an array of blocks
   isValidChain(chain) {
-    // first validate the genesis block in the chain
-    if (this.genesisBlock.toString() !== chain[0].toString()) return false;
+    if (JSON.stringify(this.genesisBlock) !== JSON.stringify(chain[0])) return false;
     // then validate every following block
     for (let i=1; i<chain.length; i++) {
       if (!this.isValidNewBlock(chain[i], chain[i-1])) {
@@ -68,7 +68,7 @@ class Blockchain {
     b) longer than the current chain
   */
   replaceChain(newChain) {
-    if (newChain.length <= this.chain) {
+    if (newChain.length <= this.chain.length) {
       console.log('Received chain is not longer than the current chain.');
       return;
     } else if (!this.isValidChain(newChain)) {

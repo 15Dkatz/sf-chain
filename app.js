@@ -15,13 +15,13 @@ HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 npm r
 const express = require('express');
 const bodyParser = require('body-parser');
 const Blockchain = require('./blockchain');
-const P2PServer = require('./p2p-server');
+const P2PChainServer = require('./p2p-chain-server');
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 
-const app = express();
-const p2pServer = new P2PServer();
 const bc = new Blockchain();
+const app = express();
+const p2pChainServer = new P2PChainServer(bc);
 
 app.use(bodyParser.json());
 
@@ -32,9 +32,10 @@ app.get('/blocks', (req, res) => {
 // TODO: add a proof of work algorithm
 app.post('/mine', (req, res) => {
   const newBlock = bc.newBlock(req.body.data);
+  p2pChainServer.syncChains();
 
   // broadcast the new block to all peers
-  // something like p2p.broadcast
+  // something like p2pChainServer.broadcast
 
   console.log(`New block added: ${newBlock.toString()}`);
 
@@ -43,12 +44,14 @@ app.post('/mine', (req, res) => {
 
 app.get('/peers', (req, res) => {
   // res.json({
-  //   peers: p2pServer.sockets.map(socket => socket._socket.address())
+  //   peers: p2pChainServer.sockets.map(socket => socket._socket.address())
   // });
-  res.json({ peers: p2pServer.sockets.length });
+  res.json({ peers: p2pChainServer.sockets.length });
 });
 
 // app.post('/addPeer');
 
 app.listen(HTTP_PORT, () => console.log(`Listening on port: ${HTTP_PORT}`));
-p2pServer.listen();
+p2pChainServer.listen();
+
+// module.exports = bc;

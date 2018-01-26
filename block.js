@@ -28,7 +28,7 @@ class Block {
   // Why static? Why not declare outside of the class?
   // Nice to be able to share functionality under the Block namespace.
   static genesis() {
-    return new this(0, Date.now(), '-*-*-', 'first hash', 'genesis block');
+    return new this(0, 'Genesis time', '-*-*-', 'first hash', 'genesis block');
   }
 
   static newBlock(lastBlock, data) {
