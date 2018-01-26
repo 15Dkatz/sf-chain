@@ -1,4 +1,5 @@
-const Blockhain = require('./blockchain');
+const Block = require('./block');
+const Blockchain = require('./blockchain');
 // TODO: what is a useful way to test this. API?
 // Testing:
 let bc = new Blockchain();

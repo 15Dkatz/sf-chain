@@ -25,7 +25,8 @@ class Blockchain {
     return this.chain[this.chain.length-1];
   }
 
-  /* Why is this necessary?
+  /*
+    Why this is necessary:
     When other nodes attempt to contribute to the blockchain, we must make sure
     that their blocks match our chain. If the proposed block's hash doesn't
     match our calculation, then it rejects too.
@@ -70,7 +71,7 @@ class Blockchain {
     if (newChain.length <= this.chain) {
       console.log('Received chain is not longer than the current chain.');
       return;
-    } else if (!bc.isValidChain(newChain)) {
+    } else if (!this.isValidChain(newChain)) {
       console.log('The received chain is not valid.');
       return;
     }
