@@ -13,17 +13,17 @@ Can read about bitcoin and develop one though - this doesn't have to be accurate
 since it's my own implementation. It won't match how Bitcoin does it. I can safely
 bet that it will be super simplified. But it gets the idea across.
 
-TODO:
-* replace log tests with a Jest test suite and runner
-
-
-
 #### P2P connection and chain-sync proof:
 one tab: `HTTP_PORT=3001 P2P_PORT=5001 npm run dev`
 x2-3: `http://localhost:3001/mine`
-another tab: `HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001pm run dev`
+another tab: `HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 npm run dev`
 Notice the syncage.
 Visit: `localhost:3002/blocks`
-Visit: `localhost:300`/blocks`
+Visit: `localhost:3000`/blocks`
 Then add mine a new block: `http://localhost:3001/mine`
 Notice the syncage.
+
+
+TODO:
+* replace log tests with a Jest test suite and runner
+* Dockerize a multi-node container in order to start up multiple nodes
