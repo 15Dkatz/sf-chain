@@ -37,4 +37,14 @@ console.log('Will a new valid chain replace the block chain?\nCalling bc.replace
 bc.replaceChain(newValidChain);
 console.log(bc.toString());
 
-// TODO: construct a 'proof of work', that shows it's actually taking time to do the mining
+// TODO: construct a 'proof of work' proof, that shows it's actually taking time to do the mining
+
+const loops = 10;
+console.log(`Demonstrating adjusting difficulty for ${loops} blocks
+  Every block takes ~1 second to complete. So this loop will take ~${loops}s to complete...`);
+
+for (let i=0; i<loops; i++) {
+  bc.addBlock(`foo${i}`);
+}
+
+console.log(bc.toString());
