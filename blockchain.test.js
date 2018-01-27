@@ -27,7 +27,7 @@ bc.chain.splice(bc.chain.length-1, 1);
 console.log('Will a corrupt chain replace the current chain?\nCalling: bc.replaceChain(corruptChain)...');
 bc.replaceChain(corruptChain);
 
-let newValidChain = [];
+const newValidChain = [];
 for (let i=0; i<bc.chain.length; i++) {
   newValidChain[i] = Object.create(bc.chain[i]);
 }
@@ -39,7 +39,7 @@ console.log(bc.toString());
 
 // TODO: construct a 'proof of work' proof, that shows it's actually taking time to do the mining
 
-const loops = 10;
+const loops = 5;
 console.log(`Demonstrating adjusting difficulty for ${loops} blocks
   Every block takes ~1 second to complete. So this loop will take ~${loops}s to complete...`);
 
@@ -48,3 +48,10 @@ for (let i=0; i<loops; i++) {
 }
 
 console.log(bc.toString());
+console.log('Will the chain be replaced by a chain with lower difficulty?...');
+const easierChain = [];
+for (let i=0; i<bc.chain.length; i++) {
+  easierChain[i] = Object.create(bc.chain[i]);
+}
+easierChain.splice(bc.chain.length-3, 3);
+bc.replaceChain(easierChain);
