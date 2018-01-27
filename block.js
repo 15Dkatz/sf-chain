@@ -1,8 +1,9 @@
 // TODO: figure out how to support imports
 const SHA256 = require('crypto-js/sha256');
+const DIFFICULTY = 3;
 
 class Block {
-  constructor(index, timestamp, lastHash, hash, data) {
+  constructor(index, timestamp, lastHash, hash, data, nonce) {
     // TODO: is the index part necessary?
     // yes the index is necessary to check additions of new blocks from multiple decentralized peers
     this.index = index;
@@ -14,6 +15,7 @@ class Block {
     this.lastHash = lastHash;
     this.hash = hash;
     this.data = data;
+    this.nonce = nonce;
   }
 
   toString() {
@@ -28,22 +30,34 @@ class Block {
   // Why static? Why not declare outside of the class?
   // Nice to be able to share functionality under the Block namespace.
   static genesis() {
-    return new this(0, 'Genesis time', '-*-*-', 'first hash', 'genesis block');
+    return new this(0, 'Genesis time', '-*-*-', 'first hash', 'genesis block', 0);
   }
 
-  static newBlock(lastBlock, data) {
+  static mineBlock(lastBlock, data) {
     const timestamp = Date.now();
-    const hash = Block.hash(timestamp, lastBlock.hash, data);
+    const index = lastBlock.index+1;
+    const lastHash = lastBlock.hash;
 
-    return new this(lastBlock.index+1, timestamp, lastBlock.hash, hash, data);
+    let hash;
+    let nonce = 0;
+
+    do {
+      // nonce - a way to control how quickly blocks are mined
+      // nonce++ must be first, otherwise the hash will be different
+      nonce++;
+      hash = Block.hash(index, timestamp, lastHash, data, nonce);
+    } while (hash.substring(0, DIFFICULTY) !== '0'.repeat(DIFFICULTY));
+
+    return new this(index, timestamp, lastHash, hash, data, nonce);
   }
 
-  static hash(timestamp, lastHash, data) {
-    return SHA256(`${timestamp}${lastHash}${data}`).toString();
+  static hash(index, timestamp, lastHash, data, nonce) {
+    return SHA256(`${index}${timestamp}${lastHash}${data}${nonce}`).toString();
   }
 
   static blockHash(block) {
-    return Block.hash(block.timestamp, block.lastHash, block.data);
+    const { index, timestamp, lastHash, data, nonce } = block;
+    return Block.hash(index, timestamp, lastHash, data, nonce);
   }
 }
 

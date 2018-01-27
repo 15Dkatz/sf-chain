@@ -31,7 +31,7 @@ app.get('/blocks', (req, res) => {
 
 // TODO: add a proof of work algorithm
 app.post('/mine', (req, res) => {
-  const newBlock = bc.newBlock(req.body.data);
+  const newBlock = bc.addBlock(req.body.data);
   p2pChainServer.syncChains();
 
   // broadcast the new block to all peers

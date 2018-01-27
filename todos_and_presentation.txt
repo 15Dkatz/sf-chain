@@ -27,3 +27,4 @@ Notice the syncage.
 TODO:
 * replace log tests with a Jest test suite and runner
 * Dockerize a multi-node container in order to start up multiple nodes
+* TODO: find 2 other tutorials. Go through them. Then make an implementation that takes the best of all 3.

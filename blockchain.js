@@ -8,13 +8,11 @@ const Block = require('./block');
 class Blockchain {
   constructor() {
     // an array of Blocks | TODO, consider a Linked List?
-    // TODO: is this a bad construct/practice?
-    this.genesisBlock = Block.genesis();
-    this.chain = [this.genesisBlock];
+    this.chain = [Block.genesis()];
   }
 
-  newBlock(data) {
-    const block = Block.newBlock(this.lastBlock(), data);
+  addBlock(data) {
+    const block = Block.mineBlock(this.lastBlock(), data);
 
     this.chain.push(block);
 
@@ -24,43 +22,6 @@ class Blockchain {
   lastBlock() {
     // This should return the last block in the chain
     return this.chain[this.chain.length-1];
-  }
-
-  /*
-    Why this is necessary:
-    When other nodes attempt to contribute to the blockchain, we must make sure
-    that their blocks match our chain. If the proposed block's hash doesn't
-    match our calculation, then it rejects too.
-
-    This is primarily used in the valid chain check.
-
-    Could inline into the isValidChain function. But probably more understanble
-    declared outside in this case.
-  */
-  isValidNewBlock(newBlock, lastBlock) {
-    if (
-      (newBlock.lastHash !== lastBlock.hash) ||
-      // this part ensures that a connecting node to the blockchain doesn't
-      // have an improper hash function calculator
-      (Block.blockHash(newBlock) !== newBlock.hash)
-    ) {
-      console.log('Invalid block');
-      return false;
-    }
-    return true;
-  }
-
-  // chain is an array of blocks
-  isValidChain(chain) {
-    if (JSON.stringify(this.genesisBlock) !== JSON.stringify(chain[0])) return false;
-    // then validate every following block
-    for (let i=1; i<chain.length; i++) {
-      if (!this.isValidNewBlock(chain[i], chain[i-1])) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   /* replace the chain with this new one if it's:
@@ -78,6 +39,35 @@ class Blockchain {
 
     console.log('Replacing blockchain with the new chain.');
     this.chain = newChain;
+  }
+
+
+  /*
+    Why this is necessary:
+    When other nodes attempt to contribute to the blockchain, we must make sure
+    that their blocks match our chain. If the proposed block's hash doesn't
+    match our calculation, then it rejects too.
+
+    chain is an array of blocks
+  */
+  // TODO: test
+  isValidChain(chain) {
+    // then validate every following block
+    for (let i=1; i<chain.length; i++) {
+      const block = chain[i];
+      const lastBlock = chain[i-1];
+
+      if (
+        block.lastHash !== lastBlock.hash ||
+        // // this part ensures that a connecting node to the blockchain doesn't
+        // // have an improper hash function calculator
+        block.hash !== Block.blockHash(block)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   // print the length of the chain, and call to String on every block in the chain

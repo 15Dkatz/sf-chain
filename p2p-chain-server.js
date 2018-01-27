@@ -1,7 +1,6 @@
-// TODO: read websocket docs for best practices cleanup
-// The peer to peer functionality must be developed after the api
-
-//!!! TODO: replace the "socket" terminology with ws to stay in accordance with https://github.com/websockets/ws
+// Before peer to peer functionality...
+// Proof of work
+// Develop the API
 
 const Websocket = require('ws');
 const P2P_PORT = process.env.P2P_PORT || 5001;
@@ -24,7 +23,7 @@ class P2PChainServer {
     this.sockets.push(socket);
     this.messageHandler(socket);
     // TODO: necessary to include?
-    this.errorHandler(socket);
+    // this.errorHandler(socket);
     // is there a socket sendJson method?
     this.sendChain(socket);
   }
@@ -37,6 +36,9 @@ class P2PChainServer {
         type: chain,
         data: this.blockchain.chain
       }
+      how does the send() method actually work? https://github.com/websockets/ws/blob/master/doc/ws.md
+      does it broadcat to all connected to sockets...? Or just one...?
+      If so, why is there a constructed broadcast function in the README?
     */
     socket.send(JSON.stringify(this.blockchain.chain));
   }
@@ -51,15 +53,15 @@ class P2PChainServer {
     });
   }
 
-  errorHandler(socket) {
-    const closeConnection = (socket) => {
-      console.log(`Connection failed to peer: ${socket.url}`);
-      this.sockets.splice(this.sockets.indexOf(socket), 1);
-    };
+  // errorHandler(socket) {
+  //   const closeConnection = (socket) => {
+  //     console.log(`Connection failed to peer: ${socket.url}`);
+  //     this.sockets.splice(this.sockets.indexOf(socket), 1);
+  //   };
 
-    socket.on('close', () => closeConnection(socket));
-    socket.on('error', () => closeConnection(socket));
-  }
+  //   socket.on('close', () => closeConnection(socket));
+  //   socket.on('error', () => closeConnection(socket));
+  // }
 
   connectToPeers() {
     peers.forEach(peer => {
