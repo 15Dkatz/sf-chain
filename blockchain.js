@@ -29,27 +29,29 @@ class Blockchain {
     b) longer than the current chain
   */
   replaceChain(newChain) {
-    // if (newChain.length <= this.chain.length) {
-    //   console.log('Received chain is not longer than the current chain.');
-    //   return;
-    // } else
+    if (newChain.length <= this.chain.length) {
+      console.log('Received chain is not longer than the current chain.');
+      return;
+    } else
 
     if (!this.isValidChain(newChain)) {
       console.log('The received chain is not valid.');
       return;
     }
 
-    // pick the chain with the highest difficulty. Ok. But why though?
-    if (this.accumulatedDifficulty(this.chain) > this.accumulatedDifficulty(newChain)) {
-      console.log('The received chain has a lower difficulty than this chain.');
-      return;
-    }
+    // Seems like bitcoin actually prefers the longest chain
+    // // pick the chain with the highest difficulty. Ok. But why though?
+    // if (this.accumulatedDifficulty(this.chain) > this.accumulatedDifficulty(newChain)) {
+    //   console.log('The received chain has a lower difficulty than this chain.');
+    //   return;
+    // }
 
     console.log('Replacing blockchain with the new chain.');
     this.chain = newChain;
   }
 
 
+  // TODO: consider removing
   // TODO: write a test arround this.
   accumulatedDifficulty(chain) {
     return chain.reduce((total, block) => total + block.difficulty);
