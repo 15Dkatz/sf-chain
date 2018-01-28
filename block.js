@@ -1,3 +1,19 @@
+/*
+  it's conventional to check `DIFFICULTY` 0's at the beginning.
+  but it's based on the randomness. So it can check for 'ab' at the begginning.
+  or not even in the beginning, it can check for '00' or 'ab' in the middle or end
+
+  demonstrate by chaning '0'.repeat to 'a'.repeat for example
+
+  with more computing power, this will be found more and more quickly
+  so we need some way to adjust the difficulty.
+
+  Based on the difference of timestamps, adjust the difficulty. The faster
+  blocks are discovered, the more difficult the proof of work should get.
+
+  proof of computational work? is that why it's name proof of work?
+*/
+
 // TODO: figure out how to support es6 imports
 // There are multiple conventions for instantiation.
 // But the `static` approach is nice since you don't have to explitcly call `new`.
@@ -74,7 +90,8 @@ class Block {
   }
 
   static hash(index, timestamp, lastHash, data, nonce, difficulty) {
-    return SHA256(`${index}${timestamp}${lastHash}${data}${nonce}${difficulty}`).toString();
+    // stringify the data, in the case that it's an object.
+    return SHA256(`${index}${timestamp}${lastHash}${JSON.stringify(data)}${nonce}${difficulty}`).toString();
   }
 
   static blockHash(block) {
@@ -84,19 +101,3 @@ class Block {
 }
 
 module.exports = Block;
-
-/*
-  it's conventional to check `DIFFICULTY` 0's at the beginning.
-  but it's based on the randomness. So it can check for 'ab' at the begginning.
-  or not even in the beginning, it can check for '00' or 'ab' in the middle or end
-
-  demonstrate by chaning '0'.repeat to 'a'.repeat for example
-
-  with more computing power, this will be found more and more quickly
-  so we need some way to adjust the difficulty.
-
-  Based on the difference of timestamps, adjust the difficulty. The faster
-  blocks are discovered, the more difficult the proof of work should get.
-
-  TODO: proof of computational work? is that why it's name proof of work?
-*/

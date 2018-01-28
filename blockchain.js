@@ -51,11 +51,10 @@ class Blockchain {
   }
 
 
-  // TODO: consider removing
-  // TODO: write a test arround this.
-  accumulatedDifficulty(chain) {
-    return chain.reduce((total, block) => total + block.difficulty);
-  }
+  // // TODO: consider removing
+  // accumulatedDifficulty(chain) {
+  //   return chain.reduce((total, block) => total + block.difficulty);
+  // }
 
 
   /*
@@ -66,7 +65,6 @@ class Blockchain {
 
     chain is an array of blocks
   */
-  // TODO: test
   isValidChain(chain) {
     // then validate every following block
     for (let i=1; i<chain.length; i++) {

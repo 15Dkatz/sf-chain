@@ -76,3 +76,11 @@
   This can be fixed with the introduction of a transaction fee.
 
 */
+
+class Transaction {
+
+  // createTransaction(sender, recipient, amount)
+
+  // validateTransaction
+  // validate amount is fair, and that the signatures are present
+}
