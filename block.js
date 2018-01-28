@@ -12,6 +12,13 @@
   blocks are discovered, the more difficult the proof of work should get.
 
   proof of computational work? is that why it's name proof of work?
+
+  With the mining of a block:
+    1. From the list of unconfirmed (not in the blockchain) transaction list
+    2. Grab the first two (how about 3) transactions
+    3. Add a new transaction containing the fee value, like 1 satoshi.
+    4. Add a reward transaction containing 50 coins to the miner's address. Can do 100 in this implementation
+    5. Prove work.
 */
 
 // TODO: figure out how to support es6 imports
@@ -66,11 +73,21 @@ class Block {
       nonce++;
       hash = Block.hash(index, timestamp, lastHash, data, nonce);
       timestamp = Date.now();
-      difficulty = Block.adjustDifficulty(lastBlock, timestamp);s
+      difficulty = Block.adjustDifficulty(lastBlock, timestamp);
+
+      // TODO: Block.grabTransactions()
+
     } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
 
     return new this(index, timestamp, lastHash, hash, data, nonce, difficulty);
   }
+
+  // TODO: static grabTransactions() {
+  //   1. From the list of unconfirmed (not in the blockchain) transaction list
+  //   2. Grab the first two (how about 3) transactions
+  //   3. Add a new transaction containing the fee value, like 1 satoshi.
+  //   4. Add a reward transaction containing 50 coins to the miner's address. Can do 100 in this implementation
+  // }
 
   static adjustDifficulty(lastBlock, currentTime) {
     /*
@@ -91,6 +108,9 @@ class Block {
 
   static hash(index, timestamp, lastHash, data, nonce, difficulty) {
     // stringify the data, in the case that it's an object.
+
+    // soon the data will be stringified transactions
+
     return SHA256(`${index}${timestamp}${lastHash}${JSON.stringify(data)}${nonce}${difficulty}`).toString();
   }
 

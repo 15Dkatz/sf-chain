@@ -15,11 +15,13 @@ HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 npm r
 const express = require('express');
 const bodyParser = require('body-parser');
 const Blockchain = require('./blockchain');
+const Wallet = require('./wallet');
 const P2PChainServer = require('./p2p-chain-server');
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 
 const bc = new Blockchain();
+const wallet = new Wallet();
 const app = express();
 const p2pChainServer = new P2PChainServer(bc);
 
@@ -29,7 +31,6 @@ app.get('/blocks', (req, res) => {
   res.json(bc.chain);
 });
 
-// TODO: add a proof of work algorithm
 app.post('/mine', (req, res) => {
   const newBlock = bc.addBlock(req.body.data);
   p2pChainServer.syncChains();
@@ -41,6 +42,15 @@ app.post('/mine', (req, res) => {
 
   res.redirect('/blocks');
 });
+
+app.post('/transact', (req, res) => {
+  const { recipient, amount } = req.body;
+
+  wallet.createTransaction(recipient, amount);
+
+  p2pChainServer.broadcastTransaction();
+});
+
 
 app.get('/peers', (req, res) => {
   // res.json({

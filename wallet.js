@@ -27,10 +27,56 @@
 
  */
 
+const CryptoJS = require('crypto-js');
+const { ec } = require('elliptic');
+const Transaction = require('./transaction');
+
+// what does this do/mean?
+const EC = new ec('secp256k1');
+
+// balance starting at 50 for now, because why not?
+
 class Wallet {
   constructor() {
-    this.privateKey = 'privateKey';
-    this.publicKey = 'publicKey'; // address
-    this.balance = 0;
+    this.privateKey = null;
+    this.publicKey = null; // address
+    this.balance = 5000;
+
+    this.generateKeys();
   }
+
+  generateKeys() {
+    const privateKey = EC.genKeyPair().getPrivate();
+    // why 16?
+    // return privateKey.toString(16);
+    const publicKey = EC.keyFromPrivate(privateKey, 'hex');
+
+    this.privateKey = privateKey.toString(16);
+    // TODO: verify/study these chained calls.
+    this.publicKey = publicKey.getPublic().encode('hex');
+  }
+
+
+  signature() {
+    console.log('TODO: figure out how to generate the signature');
+    return 999;
+  }
+
+  /**
+   * Add to the pool of unconfirmed transactions to be later verified in mining
+   */
+  createTransaction(recipient, amount) {
+    console.log(`Create transaction from ${this.publicKey} to ${recipient} of ${amount}`);
+
+    // const transaction =
+    Transaction.newTransaction(this, recipient, amount);
+  }
+
+  /**
+   * Get the total transaction attributed to this key.
+   * It should be the amount of outputs attributed to this publicKey address
+   */
+  // getBalance() {}
 }
+
+module.exports = Wallet;

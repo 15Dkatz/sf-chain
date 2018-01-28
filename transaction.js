@@ -78,9 +78,41 @@
 */
 
 class Transaction {
+  constructor() {
+    this.inputs = [];
+    this.outputs = [];
+    // this.type [regular|fee|reward]
+  }
+
+  // sender is an entire wallet class
+  // recipient is the public key of the recipient
+  static newTransaction(senderWallet, recipient, amount) {
+    this.inputs.push({
+      amount: senderWallet.balance,
+      address: senderWallet.address,
+      signature: senderWallet.signature()
+    });
+
+    const remainingBalance = senderWallet.balance - amount;
+
+    // subtract the balance from the sender
+    // TODO: add transaction fee
+
+    // and add the amount to the recipient
+    this.outputs.push(...[
+      { amount: remainingBalance, address: senderWallet.address },
+      { amount, address: recipient }
+    ]);
+  }
+
+
 
   // createTransaction(sender, recipient, amount)
 
   // validateTransaction
   // validate amount is fair, and that the signatures are present
+
+  // make sure the pool of transactions is in sync
 }
+
+// goal is to send a transaction from one wallet to the next

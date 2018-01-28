@@ -6,6 +6,8 @@ const Websocket = require('ws');
 const P2P_PORT = process.env.P2P_PORT || 5001;
 const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
+const MESSAGES = { chain: 0, transaction: 1 };
+
 class P2PChainServer {
   constructor(blockchain) {
     this.sockets = [];
@@ -40,16 +42,34 @@ class P2PChainServer {
       does it broadcat to all connected to sockets...? Or just one...?
       If so, why is there a constructed broadcast function in the README?
     */
-    socket.send(JSON.stringify(this.blockchain.chain));
+    socket.send(JSON.stringify({
+      type: 'chain',
+      chain: this.blockchain.chain
+    }));
+  }
+
+  sendTransaction(socket, transaction) {
+    socket.send(JSON.stringify({
+      type: 'transaction',
+      transaction
+    }));
   }
 
   messageHandler(socket) {
     socket.on('message', message => {
 
-      const receivedChain = JSON.parse(message);
-      // attempt to replace the original chain with the received chain
-      // the built-in functionality will actually replace the chain securely
-      this.blockchain.replaceChain(receivedChain);
+      // TODO: handle chain vs. transaction types
+      const data = JSON.parse(message);
+
+      switch(data) {
+        case MESSAGES.chain:
+          // const receivedChain = JSON.parse(message);
+          // attempt to replace the original chain with the received chain
+          // the built-in functionality will actually replace the chain securely
+          this.blockchain.replaceChain(data.chain);
+        case MESSAGES.transaction:
+          console.log('New transaction', data.transaction);
+      }
     });
   }
 
@@ -74,6 +94,10 @@ class P2PChainServer {
 
   syncChains() {
     this.sockets.forEach(socket => this.sendChain(socket));
+  }
+
+  broadcastTransaction() {
+    this.sockets.forEach(socket => this.sendTransaction(socket, transaction));
   }
 }
 
