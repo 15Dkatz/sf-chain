@@ -27,6 +27,8 @@ class TransactionPool {
     // so any transaction whose input does not match this wallet, but that has an output *sending to this wallet
 
     // console.log('address', address);
+
+    // TODO: resolve. This is inaccurate. The addition gets counted twice with multiple transactions. Check wallet-test.
     let receivedAmount = 0;
     const receivingTransactions = this.transactions.filter(transaction => transaction.inputs[0].address !== address);
     const receivingOutputs = receivingTransactions.map(transaction => transaction.outputs);
