@@ -43,17 +43,11 @@ class P2PChainServer {
       does it broadcat to all connected to sockets...? Or just one...?
       If so, why is there a constructed broadcast function in the README?
     */
-    socket.send(JSON.stringify({
-      type: 'chain',
-      chain: this.blockchain.chain
-    }));
+    socket.send(JSON.stringify({ type: 'chain', chain: this.blockchain.chain }));
   }
 
   sendTransaction(socket, transaction) {
-    socket.send(JSON.stringify({
-      type: 'transaction',
-      transaction
-    }));
+    socket.send(JSON.stringify({ type: 'transaction', transaction }));
   }
 
   messageHandler(socket) {
@@ -98,7 +92,7 @@ class P2PChainServer {
     this.sockets.forEach(socket => this.sendChain(socket));
   }
 
-  broadcastTransaction() {
+  broadcastTransaction(transaction) {
     this.sockets.forEach(socket => this.sendTransaction(socket, transaction));
   }
 }

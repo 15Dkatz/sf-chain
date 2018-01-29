@@ -101,18 +101,12 @@ class Wallet {
    */
   calculateBalance(blockchain, transactionPool) {
     // every block has a number of transactions.
+    // and count the amount stored in the blocks?
+
+    // does it also have to account for incoming inputs?
+    // also when is the balance actually updated?
+
     // go through the pool as well.
-
-
-    // TODO: sum the outputs stored in the blockchain, and the pending transactions, that match this publicKey
-    // console.log('transactionPool.transactions', transactionPool.transactions);
-    // console.log('transactionPool.transactions', transactionPool.transactions.reduce(transaction => )
-    console.log('TransactionPool balanceByAddress', transactionPool.balanceByAddress(this.publicKey));
-    // getOutputs());
-
-    // return transactionPool.transactions.reduce((total, transaction) => total + transaction.balanceByAddress(this.publicKey));
-
-
     return transactionPool.balanceByAddress(this.publicKey);
   }
 

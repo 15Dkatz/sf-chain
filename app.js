@@ -52,8 +52,17 @@ app.post('/transact', (req, res) => {
 
   // store transactions on the block itself.
   p2pChainServer.broadcastTransaction(transaction);
+
+  res.redirect('/transactions');
 });
 
+app.get('/transactions', (req, res) => {
+  res.json(tp.transactions);
+});
+
+app.get('/public-key', (req, res) => {
+  res.json({ publicKey: wallet.publicKey });
+});
 
 app.get('/peers', (req, res) => {
   // res.json({

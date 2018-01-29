@@ -5,6 +5,10 @@ class TransactionPool {
     this.transactions = [];
   }
 
+  // TODO: should transactions be limited to just one input per block?... seems limiting in terms of functionality
+  // !!!! YES. Consider the current wallet-test. Say you add the coins that people give to you, and transact based off of that.
+  // If you're allowed a second transaction into the pool, the balance of what people gave to youmay be recounted again.
+  // Alternate solution: keep track of what has already been factored into the balance calculation and skip over on the second go around?
   addTransaction(transaction) {
     console.log('add transaction', transaction);
 
@@ -12,8 +16,29 @@ class TransactionPool {
   }
 
   balanceByAddress(address) {
-    // return this.transactions.reduce((total, transaction) => total + transaction.balanceByAddress(address));
-    return this.transactions.reduce((total, transaction) => total + transaction.balanceByAddress(address), 0);
+    // in this case, I don't mind the extra variable allocation, since there's quite a bit of logic floating around.
+
+    // the balance is the **last transaction output matching the address
+    // use the spread operator so that the original array isn't modified, but rather a copy is modified.
+    const recentSendingTransaction = [...this.transactions].reverse().find(transaction => transaction.inputs[0].address === address);
+    const afterSendAmount = recentSendingTransaction.outputs.find(output => output.address === address).amount;
+
+    // calculate any outputs also being paid to this wallet
+    // so any transaction whose input does not match this wallet, but that has an output *sending to this wallet
+
+    // console.log('address', address);
+    let receivedAmount = 0;
+    const receivingTransactions = this.transactions.filter(transaction => transaction.inputs[0].address !== address);
+    const receivingOutputs = receivingTransactions.map(transaction => transaction.outputs);
+    receivingOutputs.forEach(output => {
+      output.forEach(amountAddressPair => {
+        if (amountAddressPair.address === address) {
+          receivedAmount += amountAddressPair.amount;
+        }
+      })
+    });
+
+    return afterSendAmount + receivedAmount;
   }
 }
 
