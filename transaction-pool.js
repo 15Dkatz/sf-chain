@@ -1,3 +1,23 @@
+// store the unconfirmed transactions
+
+class TransactionPool {
+  constructor() {
+    this.transactions = [];
+  }
+
+  addTransaction(transaction) {
+    console.log('add transaction', transaction);
+
+    this.transactions.push(transaction);
+  }
+
+  balanceByAddress(address) {
+    // return this.transactions.reduce((total, transaction) => total + transaction.balanceByAddress(address));
+    return this.transactions.reduce((total, transaction) => total + transaction.balanceByAddress(address), 0);
+  }
+}
+
+module.exports = TransactionPool;
 /*
 Transactions not included in the blockchain yet are "unconfirmed transactions."
 

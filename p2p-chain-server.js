@@ -9,9 +9,10 @@ const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 const MESSAGES = { chain: 0, transaction: 1 };
 
 class P2PChainServer {
-  constructor(blockchain) {
+  constructor(blockchain, transactionPool) {
     this.sockets = [];
     this.blockchain = blockchain;
+    this.transactionPool = transactionPool;
   }
 
   listen() {
@@ -69,6 +70,7 @@ class P2PChainServer {
           this.blockchain.replaceChain(data.chain);
         case MESSAGES.transaction:
           console.log('New transaction', data.transaction);
+          this.transactionPool.addTransaction(data.transaction);
       }
     });
   }

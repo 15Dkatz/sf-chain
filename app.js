@@ -15,12 +15,14 @@ HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 npm r
 const express = require('express');
 const bodyParser = require('body-parser');
 const Blockchain = require('./blockchain');
+const TransactionPool = require('./transaction-pool');
 const Wallet = require('./wallet');
 const P2PChainServer = require('./p2p-chain-server');
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 
 const bc = new Blockchain();
+const tp = new TransactionPool();
 const wallet = new Wallet();
 const app = express();
 const p2pChainServer = new P2PChainServer(bc);
@@ -46,10 +48,10 @@ app.post('/mine', (req, res) => {
 app.post('/transact', (req, res) => {
   const { recipient, amount } = req.body;
 
-  wallet.createTransaction(recipient, amount);
+  const transaction = wallet.createTransaction(recipient, amount, bc, tp);
 
   // store transactions on the block itself.
-  p2pChainServer.broadcastTransaction();
+  p2pChainServer.broadcastTransaction(transaction);
 });
 
 

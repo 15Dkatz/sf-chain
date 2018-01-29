@@ -35,3 +35,12 @@ TODO:
 * transactions and rewards on mining
 * do we have to test the p2p-chain-server, and the main app? Yes. but how?
 * how to *publicly* announce transactions?
+
+
+* TODO place app and p2p-chain-server in app/
+* rename app to main.js
+* place blockchain and block into a blockchain/ dir
+* place transaction-related files like transaction and wallet into a transaction/ dir
+
+* TODO: make pendingTransactions "official" by storing them in blocks
+* TODO: mining reward

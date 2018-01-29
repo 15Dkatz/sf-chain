@@ -34,13 +34,15 @@ const Transaction = require('./transaction');
 // what does this do/mean?
 const EC = new ec('secp256k1');
 
-// balance starting at 50 for now, because why not?
+// in this implementation, give each wallet 500 coins to start with
+// why not? Gets the economy going
+// Use this implementation unless research discloses a more traditional starting mechanism
 
 class Wallet {
   constructor() {
     this.keyPair = null;
     this.publicKey = null; // address
-    this.balance = 5000;
+    this.balance = 500;
 
     this.generateKeys();
   }
@@ -79,18 +81,40 @@ class Wallet {
   /**
    * Add to the pool of unconfirmed transactions to be later verified in mining
    */
-  createTransaction(recipient, amount) {
-    console.log(`Create transaction from ${this.publicKey} to ${recipient} of ${amount}`);
+  createTransaction(recipient, amount, blockchain, transactionPool) {
+    if (amount > this.balance) {
+      console.log(`Amount: ${amount}, exceeds current balance: ${this.balance}`);
+      return;
+    }
 
-    // const transaction =
-    Transaction.newTransaction(this, recipient, amount);
+    const transaction = Transaction.newTransaction(this, recipient, amount);
+    transactionPool.addTransaction(transaction);
+
+    this.balance = this.calculateBalance(blockchain, transactionPool);
+
+    return transaction;
   }
 
   /**
    * Get the total transaction attributed to this key.
    * It should be the amount of outputs attributed to this publicKey address
    */
-  // getBalance() {}
+  calculateBalance(blockchain, transactionPool) {
+    // every block has a number of transactions.
+    // go through the pool as well.
+
+
+    // TODO: sum the outputs stored in the blockchain, and the pending transactions, that match this publicKey
+    // console.log('transactionPool.transactions', transactionPool.transactions);
+    // console.log('transactionPool.transactions', transactionPool.transactions.reduce(transaction => )
+    console.log('TransactionPool balanceByAddress', transactionPool.balanceByAddress(this.publicKey));
+    // getOutputs());
+
+    // return transactionPool.transactions.reduce((total, transaction) => total + transaction.balanceByAddress(this.publicKey));
+
+
+    return transactionPool.balanceByAddress(this.publicKey);
+  }
 
   toString() {
     return `Wallet -

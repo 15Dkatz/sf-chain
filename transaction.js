@@ -1,12 +1,25 @@
-const SHA256 = require('crypto-js/sha256');
+// const SHA256 = require('crypto-js/sha256');
 
 class Transaction {
   constructor() {
     // a unique id that is generated from the inputs and outputs.
-    this.id = null;
+    // this.id = null;
     this.inputs = [];
     this.outputs = [];
     // this.type [regular|fee|reward]
+  }
+
+  balanceByAddress(address) {
+    return this.outputs.reduce((total, output) => {
+      // TODO: a way to condense this?
+      if (output.address === address) {
+        return total + output.amount;
+      } else { return total + 0 }
+    }, 0);;
+  }
+
+  getOutputs() {
+    return this.outputs;
   }
 
   // sender is an entire wallet class
@@ -16,7 +29,7 @@ class Transaction {
 
     transaction.inputs.push({
       amount: senderWallet.balance,
-      address: senderWallet.address,
+      address: senderWallet.publicKey,
       signature: senderWallet.sign({ recipient, amount })
     });
 
@@ -27,13 +40,13 @@ class Transaction {
 
     // and add the amount to the recipient
     transaction.outputs.push(...[
-      { amount: remainingBalance, address: senderWallet.address },
+      { amount: remainingBalance, address: senderWallet.publicKey },
       { amount, address: recipient }
     ]);
 
     // generate the id based off the input and output
     // this ensure that if an attacker tries to change the information this id will change
-    transaction.id = SHA256(`${JSON.stringify(transaction.inputs)}${JSON.stringify(transaction.outputs)}`);
+    // transaction.id = SHA256(`${JSON.stringify(transaction.inputs)}${JSON.stringify(transaction.outputs)}`);
 
     // then generate a signature based off the id
 
