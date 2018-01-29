@@ -48,6 +48,7 @@ app.post('/transact', (req, res) => {
 
   wallet.createTransaction(recipient, amount);
 
+  // store transactions on the block itself.
   p2pChainServer.broadcastTransaction();
 });
 

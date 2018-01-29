@@ -38,7 +38,7 @@ const EC = new ec('secp256k1');
 
 class Wallet {
   constructor() {
-    this.privateKey = null;
+    this.keyPair = null;
     this.publicKey = null; // address
     this.balance = 5000;
 
@@ -46,21 +46,35 @@ class Wallet {
   }
 
   generateKeys() {
-    const privateKey = EC.genKeyPair().getPrivate();
+    const keyPair = EC.genKeyPair();
+    this.keyPair = keyPair;
+    // const privateKey = EC.genKeyPair().getPrivate();
     // why 16?
     // return privateKey.toString(16);
-    const publicKey = EC.keyFromPrivate(privateKey, 'hex');
+    const publicKey = EC.keyFromPrivate(keyPair.getPrivate(), 'hex');
 
-    this.privateKey = privateKey.toString(16);
+    // this.privateKey = privateKey.toString(16);
     // TODO: verify/study these chained calls.
     this.publicKey = publicKey.getPublic().encode('hex');
   }
 
 
-  signature() {
-    console.log('TODO: figure out how to generate the signature');
-    return 999;
+  sign(data) {
+    // sign with the secret key
+    // return this.keyPair.sign(this.toHexa(data));
+    // const signature =  this.keyPair.sign(JSON.stringify(data));
+    // console.log('signature: ', signature);
+    // console.log('verify it: ', this.verify(JSON.stringify(data), ))
+
+    // console.log('verify it:', EC.keyFromPublic(this.publicKey, 'hex').verify(JSON.stringify(data), signature));
+    // console.log('verify it:', EC.keyFromPublic(this.publicKey, 'hex').verify(JSON.stringify(data), signature));
+    return this.keyPair.sign(JSON.stringify(data));
   }
+
+  // toHexa(data) {
+  //   // const string = JSON.stringify(data);
+  //   return JSON.stringify(data).split('').map(letter => Number(letter).toString(16)).join('')
+  // }
 
   /**
    * Add to the pool of unconfirmed transactions to be later verified in mining
@@ -77,6 +91,68 @@ class Wallet {
    * It should be the amount of outputs attributed to this publicKey address
    */
   // getBalance() {}
+
+  toString() {
+    return `Wallet -
+      publicKey : ${this.publicKey.toString().substring(0, 32)}
+      balance   : ${this.balance.toString().substring(0, 32)}`
+  }
+
+  // TODO: use to verify transactions from other nodes
+  static verify(publicKey, data, signature) {
+    return EC.keyFromPublic(publicKey, 'hex').verify(JSON.stringify(data), signature);
+  }
 }
 
 module.exports = Wallet;
+
+// EC Docs:
+// var EC = require('elliptic').ec;
+
+// // Create and initialize EC context
+// // (better do it once and reuse it)
+// var ec = new EC('secp256k1');
+
+// // Generate keys
+// var key = ec.genKeyPair();
+
+// // Sign the message's hash (input must be an array, or a hex-string)
+// var msgHash = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ];
+// var signature = key.sign(msgHash);
+
+// // Export DER encoded signature in Array
+// var derSign = signature.toDER();
+
+// // Verify signature
+// console.log(key.verify(msgHash, derSign));
+
+// // CHECK WITH NO PRIVATE KEY
+
+// var pubPoint = key.getPublic();
+// var x = pubPoint.getX();
+// var y = pubPoint.getY();
+
+// // Public Key MUST be either:
+// // 1) '04' + hex string of x + hex string of y; or
+// // 2) object with two hex string properties (x and y); or
+// // 3) object with two buffer properties (x and y)
+// var pub = pubPoint.encode('hex');                                 // case 1
+// var pub = { x: x.toString('hex'), y: y.toString('hex') };         // case 2
+// var pub = { x: x.toBuffer(), y: y.toBuffer() };                   // case 3
+// var pub = { x: x.toArrayLike(Buffer), y: y.toArrayLike(Buffer) }; // case 3
+
+// // Import public key
+// var key = ec.keyFromPublic(pub, 'hex');
+
+// // Signature MUST be either:
+// // 1) DER-encoded signature as hex-string; or
+// // 2) DER-encoded signature as buffer; or
+// // 3) object with two hex-string properties (r and s); or
+// // 4) object with two buffer properties (r and s)
+
+// var signature = '3046022100...'; // case 1
+// var signature = new Buffer('...'); // case 2
+// var signature = { r: 'b1fc...', s: '9c42...' }; // case 3
+
+// // Verify signature
+// console.log(key.verify(msgHash, signature));

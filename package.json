@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "blockchain-dev": "nodemon blockchain.test.js"
+    "blockchain-dev": "nodemon blockchain-test.js",
+    "wallet-dev": "nodemon wallet-test.js"
   },
   "repository": {
     "type": "git",

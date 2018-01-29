@@ -1,3 +1,61 @@
+const SHA256 = require('crypto-js/sha256');
+
+class Transaction {
+  constructor() {
+    // a unique id that is generated from the inputs and outputs.
+    this.id = null;
+    this.inputs = [];
+    this.outputs = [];
+    // this.type [regular|fee|reward]
+  }
+
+  // sender is an entire wallet class
+  // recipient is the public key of the recipient
+  static newTransaction(senderWallet, recipient, amount) {
+    const transaction = new this();
+
+    transaction.inputs.push({
+      amount: senderWallet.balance,
+      address: senderWallet.address,
+      signature: senderWallet.sign({ recipient, amount })
+    });
+
+    const remainingBalance = senderWallet.balance - amount;
+
+    // subtract the balance from the sender
+    // TODO: add transaction fee
+
+    // and add the amount to the recipient
+    transaction.outputs.push(...[
+      { amount: remainingBalance, address: senderWallet.address },
+      { amount, address: recipient }
+    ]);
+
+    // generate the id based off the input and output
+    // this ensure that if an attacker tries to change the information this id will change
+    transaction.id = SHA256(`${JSON.stringify(transaction.inputs)}${JSON.stringify(transaction.outputs)}`);
+
+    // then generate a signature based off the id
+
+    // console.log(transaction.toString());
+
+    return transaction;
+  }
+
+
+
+  // createTransaction(sender, recipient, amount)
+
+  // validateTransaction
+  // validate amount is fair, and that the signatures are present
+
+  // make sure the pool of transactions is in sync
+}
+
+// goal is to send a transaction from one wallet to the next
+
+module.exports = Transaction;
+
 /*
   Each transcation needs:
     sender
@@ -76,43 +134,3 @@
   This can be fixed with the introduction of a transaction fee.
 
 */
-
-class Transaction {
-  constructor() {
-    this.inputs = [];
-    this.outputs = [];
-    // this.type [regular|fee|reward]
-  }
-
-  // sender is an entire wallet class
-  // recipient is the public key of the recipient
-  static newTransaction(senderWallet, recipient, amount) {
-    this.inputs.push({
-      amount: senderWallet.balance,
-      address: senderWallet.address,
-      signature: senderWallet.signature()
-    });
-
-    const remainingBalance = senderWallet.balance - amount;
-
-    // subtract the balance from the sender
-    // TODO: add transaction fee
-
-    // and add the amount to the recipient
-    this.outputs.push(...[
-      { amount: remainingBalance, address: senderWallet.address },
-      { amount, address: recipient }
-    ]);
-  }
-
-
-
-  // createTransaction(sender, recipient, amount)
-
-  // validateTransaction
-  // validate amount is fair, and that the signatures are present
-
-  // make sure the pool of transactions is in sync
-}
-
-// goal is to send a transaction from one wallet to the next
