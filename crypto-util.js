@@ -1,6 +1,6 @@
 // TODO: research EdDSA
 const EC = require('elliptic').ec;
-
+const SHA256 = require('crypto-js/sha256');
 const ec = new EC('secp256k1');
 
 class CryptoUtil {
@@ -10,6 +10,10 @@ class CryptoUtil {
 
   static keyFromPrivate(keyPair) {
     return ec.keyFromPrivate(keyPair.getPrivate(), 'hex');
+  }
+
+  static hash(data) {
+    return SHA256(JSON.stringify(data)).toString();
   }
 
   static signHash(keyPair, messageHash) {

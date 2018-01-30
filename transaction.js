@@ -1,11 +1,4 @@
 const CryptoUtil = require('./crypto-util');
-// TODO: Move the hashing capabililities to CryptoUtil
-const SHA256 = require('crypto-js/sha256');
-const { ec } = require('elliptic');
-
-const EC = new ec('secp256k1');
-
-// what does this do/mean?
 
 class Transaction {
   constructor() {
@@ -42,15 +35,11 @@ class Transaction {
     Transaction.signTransaction(this, senderWallet);
   }
 
-  static transactionHash(transaction) {
-    return SHA256(JSON.stringify(transaction.outputs)).toString();
-  }
-
   static signTransaction(transaction, senderWallet) {
     transaction.input = {
       amount: senderWallet.balance,
       address: senderWallet.publicKey,
-      signature: senderWallet.sign(Transaction.transactionHash(transaction))
+      signature: senderWallet.sign(CryptoUtil.hash(transaction.outputs))
     };
   }
 
@@ -58,7 +47,7 @@ class Transaction {
     const verified = CryptoUtil.verifySignature(
       transaction.input.address,
       transaction.input.signature,
-      Transaction.transactionHash(transaction)
+      CryptoUtil.hash(transaction.outputs)
     )
 
     return verified;
