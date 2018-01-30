@@ -1,4 +1,11 @@
-// const SHA256 = require('crypto-js/sha256');
+const CryptoUtil = require('./crypto-util');
+// TODO: Move the hashing capabililities to CryptoUtil
+const SHA256 = require('crypto-js/sha256');
+const { ec } = require('elliptic');
+
+const EC = new ec('secp256k1');
+
+// what does this do/mean?
 
 class Transaction {
   constructor() {
@@ -18,29 +25,43 @@ class Transaction {
     }, 0);;
   }
 
+  // unique to this implementation...
   update(senderWallet, recipient, amount) {
     // update the sender's output amount based off the new receiving output
     const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey);
 
-    console.log('senderOutput', senderOutput);
     if (amount > senderOutput.amount) {
       console.log(`Amount: ${amount} exceeds balance.`);
     }
 
     senderOutput.amount = senderOutput.amount - amount;
 
-    // resign the updated transaction
-    Transaction.signTransaction(this, senderWallet);
-
     this.outputs.push({ amount, address: recipient });
+
+    // resign the updated transaction, will only work from the original sender
+    Transaction.signTransaction(this, senderWallet);
+  }
+
+  static transactionHash(transaction) {
+    return SHA256(JSON.stringify(transaction.outputs)).toString();
   }
 
   static signTransaction(transaction, senderWallet) {
     transaction.input = {
       amount: senderWallet.balance,
       address: senderWallet.publicKey,
-      signature: senderWallet.sign(JSON.stringify(transaction.outputs))
+      signature: senderWallet.sign(Transaction.transactionHash(transaction))
     };
+  }
+
+  static verifyTransaction(transaction) {
+    const verified = CryptoUtil.verifySignature(
+      transaction.input.address,
+      transaction.input.signature,
+      Transaction.transactionHash(transaction)
+    )
+
+    return verified;
   }
 
   // sender is an entire wallet class
@@ -59,25 +80,9 @@ class Transaction {
     ]);
 
     Transaction.signTransaction(transaction, senderWallet);
-    // generate the id based off the input and output
-    // this ensure that if an attacker tries to change the information this id will change
-    // transaction.id = SHA256(`${JSON.stringify(transaction.inputs)}${JSON.stringify(transaction.outputs)}`);
-
-    // then generate a signature based off the id
-
-    // console.log(transaction.toString());
 
     return transaction;
   }
-
-
-
-  // createTransaction(sender, recipient, amount)
-
-  // validateTransaction
-  // validate amount is fair, and that the signatures are present
-
-  // make sure the pool of transactions is in sync
 }
 
 // goal is to send a transaction from one wallet to the next

@@ -50,7 +50,7 @@ class Block {
       Timestamp : ${this.timestamp}
       Last Hash : ${this.lastHash.substring(0, 10)}
       Hash      : ${this.hash.substring(0, 10)}
-      Data      : ${JSON.stringify(this.data)}
+      Data      : ${this.data}
       Difficulty: ${this.difficulty}`;
   }
 

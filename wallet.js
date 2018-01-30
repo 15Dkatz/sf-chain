@@ -28,11 +28,8 @@
  */
 
 const CryptoJS = require('crypto-js');
-const { ec } = require('elliptic');
+const CryptoUtil = require('./crypto-util');
 const Transaction = require('./transaction');
-
-// what does this do/mean?
-const EC = new ec('secp256k1');
 
 // in this implementation, give each wallet 500 coins to start with
 // why not? Gets the economy going
@@ -48,35 +45,16 @@ class Wallet {
   }
 
   generateKeys() {
-    const keyPair = EC.genKeyPair();
+    const keyPair = CryptoUtil.genKeyPair();
     this.keyPair = keyPair;
-    // const privateKey = EC.genKeyPair().getPrivate();
-    // why 16?
-    // return privateKey.toString(16);
-    const publicKey = EC.keyFromPrivate(keyPair.getPrivate(), 'hex');
 
-    // this.privateKey = privateKey.toString(16);
-    // TODO: verify/study these chained calls.
-    this.publicKey = publicKey.getPublic().encode('hex');
+    this.publicKey = keyPair.getPublic().encode('hex');
   }
 
 
-  sign(data) {
-    // sign with the secret key
-    // return this.keyPair.sign(this.toHexa(data));
-    // const signature =  this.keyPair.sign(JSON.stringify(data));
-    // console.log('signature: ', signature);
-    // console.log('verify it: ', this.verify(JSON.stringify(data), ))
-
-    // console.log('verify it:', EC.keyFromPublic(this.publicKey, 'hex').verify(JSON.stringify(data), signature));
-    // console.log('verify it:', EC.keyFromPublic(this.publicKey, 'hex').verify(JSON.stringify(data), signature));
-    return this.keyPair.sign(JSON.stringify(data));
+  sign(messageHash) {
+    return this.keyPair.sign(messageHash);
   }
-
-  // toHexa(data) {
-  //   // const string = JSON.stringify(data);
-  //   return JSON.stringify(data).split('').map(letter => Number(letter).toString(16)).join('')
-  // }
 
   /**
    * Add to the pool of unconfirmed transactions to be later verified in mining
@@ -124,16 +102,6 @@ class Wallet {
     }, 0) : this.balance;
 
     return balance;
-
-
-    // // every block has a number of transactions.
-    // // and count the amount stored in the blocks?
-
-    // // does it also have to account for incoming inputs?
-    // // also when is the balance actually updated?
-
-    // // go through the pool as well.
-    // return transactionPool.balanceByAddress(this.publicKey);
   }
 
   toString() {
@@ -142,10 +110,10 @@ class Wallet {
       balance   : ${this.balance.toString().substring(0, 32)}`
   }
 
-  // TODO: use to verify transactions from other nodes
-  static verify(publicKey, data, signature) {
-    return EC.keyFromPublic(publicKey, 'hex').verify(JSON.stringify(data), signature);
-  }
+  // // TODO: use to verify transactions from other nodes
+  // static verify(publicKey, data, signature) {
+  //   return EC.keyFromPublic(publicKey, 'hex').verify(JSON.stringify(data), signature);
+  // }
 }
 
 module.exports = Wallet;

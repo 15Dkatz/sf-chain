@@ -18,8 +18,9 @@ wallet.createTransaction('r4nd0m-4ddr3ss', 50, blockchain, tp);
 const wallet2 = new Wallet();
 wallet2.createTransaction(wallet.publicKey, 100, blockchain, tp);
 wallet2.createTransaction(wallet.publicKey, 50, blockchain, tp);
+wallet2.createTransaction(wallet.publicKey, 30, blockchain, tp);
 
-console.log('wallet', wallet.toString());
+// console.log('wallet', wallet.toString());
 
 miner.mine();
 console.log(blockchain.toString());

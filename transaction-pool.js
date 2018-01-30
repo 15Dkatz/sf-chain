@@ -1,54 +1,51 @@
 // store the unconfirmed transactions
+const Transaction = require('./transaction');
 
 class TransactionPool {
   constructor() {
     this.transactions = [];
   }
 
-  // TODO: there needs to be some form of validation as transactions are added to the pool from other nodes
   addTransaction(transaction) {
-    console.log('add transaction', transaction);
-
     this.transactions.push(transaction);
   }
 
   // check if a transaction has already been performed by this address
   existingTransaction(address) {
-    // return undefined;
     return this.transactions.find(transaction => transaction.input.address === address);
   }
 
+  grabValidTransactions() {
+    // make sure the input amount of each transaction is equal to the output amounts
+    const validTransactions = this.transactions.map(transaction => {
+      const outputTotal = transaction.outputs.reduce((total, output) => {
+        return total + output.amount;
+      }, 0);
 
+      if (transaction.input.amount !== outputTotal) {
+        console.log(`Invalid transaction from ${transaction.input.address}.`);
+        return;
+      }
 
-  // TODO: remove
-//   balanceByAddress(address) {
-//     // in this case, I don't mind the extra variable allocation, since there's quite a bit of logic floating around.
+      // TODO: actually verify the signature of each transaction
+      if (!Transaction.verifyTransaction(transaction)) {
+        console.log(`Invalid signature from ${transaction.input.address}.`)
+        return;
+      };
 
-//     // the balance is the **last transaction output matching the address
-//     // use the spread operator so that the original array isn't modified, but rather a copy is modified.
-//     const recentSendingTransaction = [...this.transactions].reverse().find(transaction => transaction.inputs[0].address === address);
-//     const afterSendAmount = recentSendingTransaction.outputs.find(output => output.address === address).amount;
+      return transaction;
+    });
 
-//     // calculate any outputs also being paid to this wallet
-//     // so any transaction whose input does not match this wallet, but that has an output *sending to this wallet
+    console.log('validTransactions', validTransactions);
 
-//     // console.log('address', address);
+    // TODO: should this method have clear the transactions?
 
-//     // TODO: resolve. This is inaccurate. The addition gets counted twice with multiple transactions. Check wallet-test.
-//     // Possibly: look at bitcoin.pdf for "double spending solution"
-//     let receivedAmount = 0;
-//     const receivingTransactions = this.transactions.filter(transaction => transaction.inputs[0].address !== address);
-//     const receivingOutputs = receivingTransactions.map(transaction => transaction.outputs);
-//     receivingOutputs.forEach(output => {
-//       output.forEach(amountAddressPair => {
-//         if (amountAddressPair.address === address) {
-//           receivedAmount += amountAddressPair.amount;
-//         }
-//       })
-//     });
+    return this.transactions;
+  }
 
-//     return afterSendAmount + receivedAmount;
-//   }
+  clear() {
+    this.transactions = [];
+  }
 }
 
 module.exports = TransactionPool;
