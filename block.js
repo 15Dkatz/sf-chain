@@ -24,8 +24,9 @@
 // TODO: figure out how to support es6 imports
 // There are multiple conventions for instantiation.
 // But the `static` approach is nice since you don't have to explitcly call `new`.
-const SHA256 = require('crypto-js/sha256');
-const DIFFICULTY = 4;
+
+const CryptoUtil = require('./crypto-util');
+const { DIFFICULTY } = require('./config');
 
 class Block {
   constructor(index, timestamp, lastHash, hash, data, nonce, difficulty) {
@@ -74,20 +75,10 @@ class Block {
       hash = Block.hash(index, timestamp, lastHash, data, nonce);
       timestamp = Date.now();
       difficulty = Block.adjustDifficulty(lastBlock, timestamp);
-
-      // TODO: Block.grabTransactions()
-
     } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
 
     return new this(index, timestamp, lastHash, hash, data, nonce, difficulty);
   }
-
-  // TODO: static grabTransactions() {
-  //   1. From the list of unconfirmed (not in the blockchain) transaction list
-  //   2. Grab the first two (how about 3) transactions
-  //   3. Add a new transaction containing the fee value, like 1 satoshi.
-  //   4. Add a reward transaction containing 50 coins to the miner's address. Can do 100 in this implementation
-  // }
 
   static adjustDifficulty(lastBlock, currentTime) {
     /*
@@ -100,30 +91,19 @@ class Block {
       test by creating a for loop up to 100 and watching the difficulty
     */
     let { difficulty } = lastBlock;
-
     difficulty = lastBlock.timestamp + 1000 > currentTime ? difficulty + 1 : difficulty - 1;
 
     return difficulty;
   }
 
   static hash(index, timestamp, lastHash, data, nonce, difficulty) {
-    // stringify the data, in the case that it's an object.
-
-    // soon the data will be stringified transactions
-
-    return SHA256(`${index}${timestamp}${lastHash}${JSON.stringify(data)}${nonce}${difficulty}`).toString();
+    return CryptoUtil.hash({ index, timestamp, lastHash, data, nonce, difficulty });
   }
 
   static blockHash(block) {
-    const { index, timestamp, lastHash, data, nonce } = block;
-    return Block.hash(index, timestamp, lastHash, data, nonce);
+    const { index, timestamp, lastHash, data, nonce, difficulty } = block;
+    return Block.hash(index, timestamp, lastHash, data, nonce, difficulty);
   }
 }
 
 module.exports = Block;
-
-
-// the mine function needs to be seperate. once the miner has proven work
-// then they can generate a block using the transactions present in the transaction pool
-// when everyone syncs their chains, then wallets should also be updated
-// new transactions will be based on the current blockchain after all.
