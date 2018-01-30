@@ -5,4 +5,4 @@ const DIFFICULTY = 4;
 const INITIAL_BALANCE = 500;
 const MINER_REWARD = 50;
 
-module.exports = { INITIAL_BALANCE, MINER_REWARD };
+module.exports = { DIFFICULTY, INITIAL_BALANCE, MINER_REWARD };
