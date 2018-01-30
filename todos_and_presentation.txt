@@ -42,5 +42,6 @@ TODO:
 * place blockchain and block into a blockchain/ dir
 * place transaction-related files like transaction and wallet into a transaction/ dir
 
-* TODO: make pendingTransactions "official" by storing them in blocks
+1/29/18
 * TODO: mining reward
+* Verify transactions using the signature somehow
