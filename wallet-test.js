@@ -7,8 +7,7 @@ const blockchain = new Blockchain();
 const tp = new TransactionPool();
 const wallet = new Wallet();
 
-// TODO: should every generate their own chain within the miner class itself...?
-const miner = new Miner(blockchain, tp);
+const miner = new Miner(blockchain, tp, wallet);
 
 console.log('wallet', wallet.toString());
 wallet.createTransaction('r4nd0m-4ddr3ss', 50, blockchain, tp);

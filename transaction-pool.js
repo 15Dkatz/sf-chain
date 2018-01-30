@@ -38,9 +38,7 @@ class TransactionPool {
 
     console.log('validTransactions', validTransactions);
 
-    // TODO: should this method have clear the transactions?
-
-    return this.transactions;
+    return validTransactions;
   }
 
   clear() {

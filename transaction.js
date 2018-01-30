@@ -1,9 +1,8 @@
 const CryptoUtil = require('./crypto-util');
+const { MINER_REWARD } = require('./config');
 
 class Transaction {
   constructor() {
-    // a unique id that is generated from the inputs and outputs.
-    // this.id = null;
     this.input = null;
     this.outputs = [];
     // this.type [regular|fee|reward]
@@ -53,38 +52,37 @@ class Transaction {
     return verified;
   }
 
-  // sender is an entire wallet class
-  // recipient is the public key of the recipient
-  static newTransaction(senderWallet, recipient, amount) {
+  static newTransaction(senderWallet, outputs) {
     const transaction = new this();
-    const senderAmount = senderWallet.balance - amount;
-
-    // subtract the balance from the sender
-    // TODO: add transaction fee
-
-    // and add the amount to the recipient
-    transaction.outputs.push(...[
-      { amount: senderAmount, address: senderWallet.publicKey },
-      { amount, address: recipient }
-    ]);
-
+    transaction.outputs.push(...outputs);
     Transaction.signTransaction(transaction, senderWallet);
 
     return transaction;
   }
-}
 
-// goal is to send a transaction from one wallet to the next
+  // sender is an entire wallet class
+  // recipient is the public key of the recipient
+  static normalTransaction(senderWallet, recipient, amount) {
+    // subtract the balance from the sender
+    const senderAmount = senderWallet.balance - amount;
+
+    // TODO: add transaction fee
+    return Transaction.newTransaction(senderWallet, [
+      { amount: senderAmount, address: senderWallet.publicKey },
+      { amount, address: recipient }
+    ]);
+  }
+
+  static rewardTransaction(minerWallet) {
+    return Transaction.newTransaction(minerWallet, [{
+      amount: MINER_REWARD, address: minerWallet.publicKey
+    }]);
+  }
+}
 
 module.exports = Transaction;
 
 /*
-  Each transcation needs:
-    sender
-    recipient
-    amount
-
-
   // TODO: make a presentation video out of this.
   The idea is to create a list of pending transactions.
 

@@ -7,7 +7,6 @@
   PUBLIC KEY: The public key can then be derived from the private key.
 
   BALANCE: When own coins, what you have is a list of unspent transactions. Get the sum of that amount.
-  TODO: consider the "unspent transaction" terminology. Possible design without it? Why not just amounts?
 
   TRANSACTIONS: If A wants to send 40 of his/her 50 coins to B, then 40 is sent to A and 10 is sent to B.
   ...
@@ -30,16 +29,17 @@
 const CryptoJS = require('crypto-js');
 const CryptoUtil = require('./crypto-util');
 const Transaction = require('./transaction');
+const { INITIAL_BALANCE } = require('./config');
 
-// in this implementation, give each wallet 500 coins to start with
-// why not? Gets the economy going
+// in this implementation, give each wallet 500 coins to start with.
+// Because it gets the economy going
 // Use this implementation unless research discloses a more traditional starting mechanism
 
 class Wallet {
   constructor() {
     this.keyPair = null;
     this.publicKey = null; // address
-    this.balance = 500;
+    this.balance = INITIAL_BALANCE;
 
     this.generateKeys();
   }
@@ -50,7 +50,6 @@ class Wallet {
 
     this.publicKey = keyPair.getPublic().encode('hex');
   }
-
 
   sign(messageHash) {
     return this.keyPair.sign(messageHash);
@@ -73,7 +72,7 @@ class Wallet {
     if (transaction) {
       transaction.update(this, recipient, amount);
     } else {
-      transaction = Transaction.newTransaction(this, recipient, amount);
+      transaction = Transaction.normalTransaction(this, recipient, amount);
       transactionPool.addTransaction(transaction);
     }
 
@@ -109,62 +108,6 @@ class Wallet {
       publicKey : ${this.publicKey.toString().substring(0, 32)}
       balance   : ${this.balance.toString().substring(0, 32)}`
   }
-
-  // // TODO: use to verify transactions from other nodes
-  // static verify(publicKey, data, signature) {
-  //   return EC.keyFromPublic(publicKey, 'hex').verify(JSON.stringify(data), signature);
-  // }
 }
 
 module.exports = Wallet;
-
-// EC Docs:
-// var EC = require('elliptic').ec;
-
-// // Create and initialize EC context
-// // (better do it once and reuse it)
-// var ec = new EC('secp256k1');
-
-// // Generate keys
-// var key = ec.genKeyPair();
-
-// // Sign the message's hash (input must be an array, or a hex-string)
-// var msgHash = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ];
-// var signature = key.sign(msgHash);
-
-// // Export DER encoded signature in Array
-// var derSign = signature.toDER();
-
-// // Verify signature
-// console.log(key.verify(msgHash, derSign));
-
-// // CHECK WITH NO PRIVATE KEY
-
-// var pubPoint = key.getPublic();
-// var x = pubPoint.getX();
-// var y = pubPoint.getY();
-
-// // Public Key MUST be either:
-// // 1) '04' + hex string of x + hex string of y; or
-// // 2) object with two hex string properties (x and y); or
-// // 3) object with two buffer properties (x and y)
-// var pub = pubPoint.encode('hex');                                 // case 1
-// var pub = { x: x.toString('hex'), y: y.toString('hex') };         // case 2
-// var pub = { x: x.toBuffer(), y: y.toBuffer() };                   // case 3
-// var pub = { x: x.toArrayLike(Buffer), y: y.toArrayLike(Buffer) }; // case 3
-
-// // Import public key
-// var key = ec.keyFromPublic(pub, 'hex');
-
-// // Signature MUST be either:
-// // 1) DER-encoded signature as hex-string; or
-// // 2) DER-encoded signature as buffer; or
-// // 3) object with two hex-string properties (r and s); or
-// // 4) object with two buffer properties (r and s)
-
-// var signature = '3046022100...'; // case 1
-// var signature = new Buffer('...'); // case 2
-// var signature = { r: 'b1fc...', s: '9c42...' }; // case 3
-
-// // Verify signature
-// console.log(key.verify(msgHash, signature));
