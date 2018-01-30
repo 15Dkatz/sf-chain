@@ -109,7 +109,6 @@ class Wallet {
    * It should be the amount of outputs attributed to this publicKey address in the given chain
    */
   calculateBalance(blockchain) {
-    console.log('!!! Calculate balance !!!', blockchain.chain);
     // filter down to the outputs contained in the chain
     let outputs = [];
     blockchain.chain.forEach(block => block.data.forEach(transaction => {

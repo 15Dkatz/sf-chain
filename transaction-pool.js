@@ -14,7 +14,8 @@ class TransactionPool {
 
   // check if a transaction has already been performed by this address
   existingTransaction(address) {
-    return this.transactions.find(transaction => transaction.input = address);
+    // return undefined;
+    return this.transactions.find(transaction => transaction.input.address === address);
   }
 
 

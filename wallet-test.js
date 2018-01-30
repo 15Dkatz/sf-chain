@@ -14,8 +14,10 @@ console.log('wallet', wallet.toString());
 wallet.createTransaction('r4nd0m-4ddr3ss', 50, blockchain, tp);
 wallet.createTransaction('r4nd0m-4ddr3ss', 50, blockchain, tp);
 
-// const wallet2 = new Wallet();
-// wallet2.createTransaction(wallet.publicKey, 100, )
+// TODO: test multiple wallets performing transactions
+const wallet2 = new Wallet();
+wallet2.createTransaction(wallet.publicKey, 100, blockchain, tp);
+wallet2.createTransaction(wallet.publicKey, 50, blockchain, tp);
 
 console.log('wallet', wallet.toString());
 
