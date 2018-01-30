@@ -4,7 +4,7 @@ class Transaction {
   constructor() {
     // a unique id that is generated from the inputs and outputs.
     // this.id = null;
-    this.inputs = [];
+    this.input = null;
     this.outputs = [];
     // this.type [regular|fee|reward]
   }
@@ -18,32 +18,46 @@ class Transaction {
     }, 0);;
   }
 
-  getOutputs() {
-    return this.outputs;
+  update(senderWallet, recipient, amount) {
+    // update the sender's output amount based off the new receiving output
+    const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey);
+
+    if (amount > senderOutput.amount) {
+      console.log(`Amount: ${amount} exceeds balance.`);
+    }
+
+    senderOutput.amount = senderOutput.amount - amount;
+
+    // resign the updated transaction
+    Transaction.signTransaction(this, senderWallet);
+
+    this.outputs.push({ amount, address: recipient });
+  }
+
+  static signTransaction(transaction, senderWallet) {
+    transaction.input = {
+      amount: senderWallet.balance,
+      address: senderWallet.publicKey,
+      signature: senderWallet.sign(JSON.stringify(transaction.outputs))
+    };
   }
 
   // sender is an entire wallet class
   // recipient is the public key of the recipient
   static newTransaction(senderWallet, recipient, amount) {
     const transaction = new this();
-
-    transaction.inputs.push({
-      amount: senderWallet.balance,
-      address: senderWallet.publicKey,
-      signature: senderWallet.sign({ recipient, amount })
-    });
-
-    const remainingBalance = senderWallet.balance - amount;
+    const senderAmount = senderWallet.balance - amount;
 
     // subtract the balance from the sender
     // TODO: add transaction fee
 
     // and add the amount to the recipient
     transaction.outputs.push(...[
-      { amount: remainingBalance, address: senderWallet.publicKey },
+      { amount: senderAmount, address: senderWallet.publicKey },
       { amount, address: recipient }
     ]);
 
+    Transaction.signTransaction(transaction, senderWallet);
     // generate the id based off the input and output
     // this ensure that if an attacker tries to change the information this id will change
     // transaction.id = SHA256(`${JSON.stringify(transaction.inputs)}${JSON.stringify(transaction.outputs)}`);

@@ -82,13 +82,22 @@ class Wallet {
    * Add to the pool of unconfirmed transactions to be later verified in mining
    */
   createTransaction(recipient, amount, blockchain, transactionPool) {
+    this.balance = this.calculateBalance(blockchain, transactionPool);
+
     if (amount > this.balance) {
       console.log(`Amount: ${amount}, exceeds current balance: ${this.balance}`);
       return;
     }
 
-    const transaction = Transaction.newTransaction(this, recipient, amount);
-    transactionPool.addTransaction(transaction);
+    // if a transaction in the pool already has this input, then add this transaction to its outputs
+    let transaction = transactionPool.existingTransaction(this.publicKey);
+
+    if (transaction) {
+      transaction.update(this, recipient, amount);
+    } else {
+      transaction = Transaction.newTransaction(this, recipient, amount);
+      transactionPool.addTransaction(transaction);
+    }
 
     this.balance = this.calculateBalance(blockchain, transactionPool);
 
@@ -99,15 +108,22 @@ class Wallet {
    * Get the total transaction attributed to this key.
    * It should be the amount of outputs attributed to this publicKey address
    */
-  calculateBalance(blockchain, transactionPool) {
-    // every block has a number of transactions.
-    // and count the amount stored in the blocks?
+  calculateBalance(blockchain) {
+    // transactionPool may not be necessary
+    // TODO: the balance is the total of all the transactions stored in the actual blockchain
+    // look at the included transactions of each block in the chain and look at all the unspent outputs belonging to this address
 
-    // does it also have to account for incoming inputs?
-    // also when is the balance actually updated?
+    return this.balance;
 
-    // go through the pool as well.
-    return transactionPool.balanceByAddress(this.publicKey);
+
+    // // every block has a number of transactions.
+    // // and count the amount stored in the blocks?
+
+    // // does it also have to account for incoming inputs?
+    // // also when is the balance actually updated?
+
+    // // go through the pool as well.
+    // return transactionPool.balanceByAddress(this.publicKey);
   }
 
   toString() {

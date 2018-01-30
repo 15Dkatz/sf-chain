@@ -8,13 +8,13 @@ console.log('wallet', wallet.toString());
 wallet.createTransaction('r4nd0m-4ddr3ss', 50, null, tp);
 wallet.createTransaction('r4nd0m-4ddr3ss', 50, null, tp);
 
-const wallet2 = new Wallet();
-wallet2.createTransaction(wallet.publicKey, 53, null, tp);
+// const wallet2 = new Wallet();
+// wallet2.createTransaction(wallet.publicKey, 53, null, tp);
 
-wallet.createTransaction('r4nd0m-4ddr3ss', 200, null, tp);
-wallet.createTransaction('r4nd0m-4ddr3ss', 50, null, tp);
+// wallet.createTransaction('r4nd0m-4ddr3ss', 200, null, tp);
+// wallet.createTransaction('r4nd0m-4ddr3ss', 50, null, tp);
 
-
+// console.log('tp.transactions', tp.transactions[0].outputs);
 console.log('wallet', wallet.toString());
 
 // console.log('wallet', wallet.toString());

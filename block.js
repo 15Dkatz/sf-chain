@@ -121,3 +121,9 @@ class Block {
 }
 
 module.exports = Block;
+
+
+// the mine function needs to be seperate. once the miner has proven work
+// then they can generate a block using the transactions present in the transaction pool
+// when everyone syncs their chains, then wallets should also be updated
+// new transactions will be based on the current blockchain after all.
