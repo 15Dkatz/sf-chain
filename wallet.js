@@ -106,14 +106,25 @@ class Wallet {
 
   /**
    * Get the total transaction attributed to this key.
-   * It should be the amount of outputs attributed to this publicKey address
+   * It should be the amount of outputs attributed to this publicKey address in the given chain
    */
   calculateBalance(blockchain) {
-    // transactionPool may not be necessary
-    // TODO: the balance is the total of all the transactions stored in the actual blockchain
-    // look at the included transactions of each block in the chain and look at all the unspent outputs belonging to this address
+    console.log('!!! Calculate balance !!!', blockchain.chain);
+    // filter down to the outputs contained in the chain
+    let outputs = [];
+    blockchain.chain.forEach(block => block.data.forEach(transaction => {
+      outputs = [...outputs, ...transaction.outputs];
+    }));
 
-    return this.balance;
+    let balance = outputs.length > 0 ? outputs.reduce((total, output) => {
+      if (output.address === this.publicKey) {
+        return total + output.amount;
+      } else {
+        return total + 0;
+      }
+    }, 0) : this.balance;
+
+    return balance;
 
 
     // // every block has a number of transactions.

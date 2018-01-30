@@ -50,14 +50,14 @@ class Block {
       Timestamp : ${this.timestamp}
       Last Hash : ${this.lastHash.substring(0, 10)}
       Hash      : ${this.hash.substring(0, 10)}
-      Data      : ${this.data}
+      Data      : ${JSON.stringify(this.data)}
       Difficulty: ${this.difficulty}`;
   }
 
   // Why static? Why not declare outside of the class?
   // Nice to be able to share functionality under the Block namespace.
   static genesis() {
-    return new this(0, 'Genesis time', '-----', 'f1rSt-h4sh', 'genesis block', 0);
+    return new this(0, 'Genesis time', '-----', 'f1rSt-h4sh', [], 0);
   }
 
   static mineBlock(lastBlock, data) {

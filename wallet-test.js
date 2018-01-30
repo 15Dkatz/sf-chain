@@ -1,21 +1,37 @@
+const Blockchain = require('./blockchain');
 const Wallet = require('./wallet');
 const TransactionPool = require('./transaction-pool');
+const Miner = require('./miner');
 
+const blockchain = new Blockchain();
 const tp = new TransactionPool();
 const wallet = new Wallet();
 
+// TODO: should every generate their own chain within the miner class itself...?
+const miner = new Miner(blockchain, tp);
+
 console.log('wallet', wallet.toString());
-wallet.createTransaction('r4nd0m-4ddr3ss', 50, null, tp);
-wallet.createTransaction('r4nd0m-4ddr3ss', 50, null, tp);
+wallet.createTransaction('r4nd0m-4ddr3ss', 50, blockchain, tp);
+wallet.createTransaction('r4nd0m-4ddr3ss', 50, blockchain, tp);
 
 // const wallet2 = new Wallet();
+// wallet2.createTransaction(wallet.publicKey, 100, )
+
+console.log('wallet', wallet.toString());
+
+miner.mine();
+console.log(blockchain.toString());
+
+wallet.createTransaction('r4nd0m-4ddr3ss', 200, blockchain, tp);
+
+console.log('wallet', wallet.toString());
+
 // wallet2.createTransaction(wallet.publicKey, 53, null, tp);
 
 // wallet.createTransaction('r4nd0m-4ddr3ss', 200, null, tp);
 // wallet.createTransaction('r4nd0m-4ddr3ss', 50, null, tp);
 
 // console.log('tp.transactions', tp.transactions[0].outputs);
-console.log('wallet', wallet.toString());
 
 // console.log('wallet', wallet.toString());
 

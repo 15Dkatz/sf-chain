@@ -15,6 +15,8 @@ class Miner {
       Or should it remain in the actual Block class? <-- this definitely simplifies things in terms of generating the correct hash.
     */
 
+    // shift in a reward transaction to the miner to the front of the transaction list
+
     this.blockchain.addBlock(this.transactionPool.transactions);
   }
 }
