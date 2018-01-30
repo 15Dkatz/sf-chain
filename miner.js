@@ -4,10 +4,11 @@
 const Transaction = require('./transaction');
 
 class Miner {
-  constructor(blockchain, transactionPool, wallet) {
+  constructor(blockchain, transactionPool, wallet, p2pChainServer) {
     this.blockchain = blockchain;
     this.transactionPool = transactionPool;
     this.wallet = wallet;
+    this.p2pChainServer = p2pChainServer;
   }
 
   // This really brings everything together
@@ -22,10 +23,8 @@ class Miner {
 
     this.blockchain.addBlock(validTransactions);
     // once the block is added, clear the transactionPool allowing everyone to reset
-
-    // TODO: broadcast this clear to all the nodes
     // after all, shouldn't everyone get an updated transaction pool list?
-    this.transactionPool.clear();
+    this.p2pChainServer.broadcastClearTransactions();
   }
 }
 

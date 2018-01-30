@@ -6,7 +6,7 @@ const Websocket = require('ws');
 const P2P_PORT = process.env.P2P_PORT || 5001;
 const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
-const MESSAGES = { chain: 0, transaction: 1 };
+const MESSAGE_TYPES = { chain: 0, transaction: 1, clear_transactions: 2 };
 
 class P2PChainServer {
   constructor(blockchain, transactionPool) {
@@ -33,38 +33,32 @@ class P2PChainServer {
 
   sendChain(socket) {
     /*
-      If there are more message types in the future, then use a redux-style action approach
-      where the sent object has a type field, like:
-      {
-        type: chain,
-        data: this.blockchain.chain
-      }
       how does the send() method actually work? https://github.com/websockets/ws/blob/master/doc/ws.md
       does it broadcat to all connected to sockets...? Or just one...?
       If so, why is there a constructed broadcast function in the README?
     */
-    socket.send(JSON.stringify({ type: 'chain', chain: this.blockchain.chain }));
+    socket.send(JSON.stringify({ type: MESSAGE_TYPES.chain, chain: this.blockchain.chain }));
   }
 
   sendTransaction(socket, transaction) {
-    socket.send(JSON.stringify({ type: 'transaction', transaction }));
+    socket.send(JSON.stringify({ type: MESSAGE_TYPES.transaction, transaction }));
   }
 
   messageHandler(socket) {
     socket.on('message', message => {
-
-      // TODO: handle chain vs. transaction types
       const data = JSON.parse(message);
 
-      switch(data) {
-        case MESSAGES.chain:
+      switch(data.type) {
+        case MESSAGE_TYPES.chain:
           // const receivedChain = JSON.parse(message);
           // attempt to replace the original chain with the received chain
           // the built-in functionality will actually replace the chain securely
           this.blockchain.replaceChain(data.chain);
-        case MESSAGES.transaction:
+        case MESSAGE_TYPES.transaction:
           console.log('New transaction', data.transaction);
           this.transactionPool.addTransaction(data.transaction);
+        case MESSAGE_TYPES.clear_transactions:
+          this.transactionPool.clear();
       }
     });
   }
@@ -94,6 +88,10 @@ class P2PChainServer {
 
   broadcastTransaction(transaction) {
     this.sockets.forEach(socket => this.sendTransaction(socket, transaction));
+  }
+
+  broadcastClearTransactions() {
+    this.sockets.forEach(socket => socket.send({ type: MESSAGE_TYPES.clear_transactions }));
   }
 }
 

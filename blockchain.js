@@ -1,13 +1,10 @@
 // Object-Oriented
-// TODO: what about a sender, and recipient class for that matter?
-
 // Explain skeleton-based coding philosophy - fill things out bit by bit
 
 const Block = require('./block');
 
 class Blockchain {
   constructor() {
-    // an array of Blocks | TODO, consider a Linked List?
     this.chain = [Block.genesis()];
   }
 
@@ -20,7 +17,6 @@ class Blockchain {
   }
 
   lastBlock() {
-    // This should return the last block in the chain
     return this.chain[this.chain.length-1];
   }
 
@@ -40,7 +36,7 @@ class Blockchain {
     }
 
     // Seems like bitcoin actually prefers the longest chain
-    // // pick the chain with the highest difficulty. Ok. But why though?
+    // There are also implementations with the highest accumulated difficulty. Which one is preferred?
     // if (this.accumulatedDifficulty(this.chain) > this.accumulatedDifficulty(newChain)) {
     //   console.log('The received chain has a lower difficulty than this chain.');
     //   return;
@@ -49,12 +45,6 @@ class Blockchain {
     console.log('Replacing blockchain with the new chain.');
     this.chain = newChain;
   }
-
-
-  // // TODO: consider removing
-  // accumulatedDifficulty(chain) {
-  //   return chain.reduce((total, block) => total + block.difficulty);
-  // }
 
 
   /*
@@ -73,8 +63,8 @@ class Blockchain {
 
       if (
         block.lastHash !== lastBlock.hash ||
-        // // this part ensures that a connecting node to the blockchain doesn't
-        // // have an improper hash function calculator
+        // this part ensures that a connecting node to the blockchain doesn't
+        // have an improper hash function calculator
         block.hash !== Block.blockHash(block)
       ) {
         return false;

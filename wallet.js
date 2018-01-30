@@ -9,31 +9,20 @@
   BALANCE: When own coins, what you have is a list of unspent transactions. Get the sum of that amount.
 
   TRANSACTIONS: If A wants to send 40 of his/her 50 coins to B, then 40 is sent to A and 10 is sent to B.
-  ...
 
-  Two transactions are created for the receiver, and one for the leftover amount of the sender.
-
+  Two outputs are created for the receiver, and one for the leftover amount of the sender.
   The sender should only have to provide the address of the receiver, and the amount to send.
-
-  Still, nodes do not exchange information yet about transactions that are not included in the blockchain.
-  The only way to include a desired transaction in the blockchain is to mine it yourself.
-
-  Have a check balance function to show the balance after the transaction.
-
-  Have a wallet, with the private key, public key, balance, and ?transactions?
 
   Want to support the ability to send coins from one address the other
 
+  Balances are recalculated at the start of every transaction.
+  A balance can always be calculated with the calculateBalance functino.
  */
 
 const CryptoJS = require('crypto-js');
 const CryptoUtil = require('./crypto-util');
 const Transaction = require('./transaction');
 const { INITIAL_BALANCE } = require('./config');
-
-// in this implementation, give each wallet 500 coins to start with.
-// Because it gets the economy going
-// Use this implementation unless research discloses a more traditional starting mechanism
 
 class Wallet {
   constructor() {
