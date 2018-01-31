@@ -26,27 +26,12 @@ describe('Wallet', () => {
       transaction = wallet.createTransaction(recipient, sendAmount, bc, tp);
     });
 
-    it('inputs the balance of the wallet', () => {
-      expect(transaction.input.address).toEqual(wallet.publicKey);
-    });
-
-    it('ouputs the `sendAmount` subtracted from the wallet balance', () => {
-      expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
-        .toEqual(wallet.balance - sendAmount);
-    });
-
-
-    it('outputs the `sendAmount` added to the recipient', () => {
-      expect(transaction.outputs.find(output => output.address === recipient).amount)
-        .toEqual(sendAmount);
-    });
-
     describe('and doing the same transaction', () => {
       beforeEach(() => {
         const transaction2 = wallet.createTransaction(recipient, sendAmount, bc, tp);
       });
 
-      it('doubles the amount subtracted from the wallet balance', () => {
+      it('doubles the `sendAmount` subtracted from the wallet balance', () => {
         expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
           .toEqual(wallet.balance - sendAmount*2);
       });

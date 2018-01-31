@@ -1,22 +1,21 @@
 const CryptoUtil = require('./crypto-util');
-const { MINER_REWARD } = require('./config');
+const { MINING_REWARD } = require('./config');
 
 class Transaction {
   constructor() {
     this.index = CryptoUtil.timeId();
     this.input = null;
     this.outputs = [];
-    // this.type [regular|fee|reward]
   }
 
-  balanceByAddress(address) {
-    return this.outputs.reduce((total, output) => {
-      // TODO: a way to condense this?
-      if (output.address === address) {
-        return total + output.amount;
-      } else { return total + 0 }
-    }, 0);
-  }
+  // balanceByAddress(address) {
+  //   return this.outputs.reduce((total, output) => {
+  //     // TODO: a way to condense this?
+  //     if (output.address === address) {
+  //       return total + output.amount;
+  //     } else { return total + 0 }
+  //   }, 0);
+  // }
 
   // unique to this implementation...
   update(senderWallet, recipient, amount) {
@@ -76,7 +75,7 @@ class Transaction {
 
   static rewardTransaction(minerWallet) {
     return Transaction.newTransaction(minerWallet, [{
-      amount: MINER_REWARD, address: minerWallet.publicKey
+      amount: MINING_REWARD, address: minerWallet.publicKey
     }]);
   }
 }

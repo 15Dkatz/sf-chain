@@ -3,6 +3,6 @@ const DIFFICULTY = 4;
 // Because it gets the economy going
 // Use this implementation unless research discloses a more traditional starting mechanism
 const INITIAL_BALANCE = 500;
-const MINER_REWARD = 50;
+const MINING_REWARD = 50;
 
-module.exports = { DIFFICULTY, INITIAL_BALANCE, MINER_REWARD };
+module.exports = { DIFFICULTY, INITIAL_BALANCE, MINING_REWARD };
