@@ -10,6 +10,9 @@
     "blockchain-dev": "nodemon blockchain-test.js",
     "wallet-dev": "nodemon wallet-test.js"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/15Dkatz/sf-chain.git"

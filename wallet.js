@@ -34,10 +34,8 @@ class Wallet {
   }
 
   generateKeys() {
-    const keyPair = CryptoUtil.genKeyPair();
-    this.keyPair = keyPair;
-
-    this.publicKey = keyPair.getPublic().encode('hex');
+    this.keyPair = CryptoUtil.genKeyPair();
+    this.publicKey = this.keyPair.getPublic().encode('hex');
   }
 
   sign(messageHash) {

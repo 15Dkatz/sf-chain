@@ -54,10 +54,8 @@ class Blockchain {
     chain is an array of blocks
   */
   isValidChain(chain) {
-    // then validate every following block
-    // TODO: test: the first block must the genesis
     if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) return false;
-
+    // then validate every following block
     for (let i=1; i<chain.length; i++) {
       const block = chain[i];
       const lastBlock = chain[i-1];
