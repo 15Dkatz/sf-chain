@@ -6,13 +6,19 @@ const Websocket = require('ws');
 const P2P_PORT = process.env.P2P_PORT || 5001;
 const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
-const MESSAGE_TYPES = { chain: 0, transaction: 1, clear_transactions: 2 };
+const MESSAGE_TYPES = {
+  chain: 'CHAIN',
+  transaction: 'TRANSACTION',
+  clear_transactions: 'CLEAR_TRANSACTIONS'
+};
 
 class P2PChainServer {
-  constructor(blockchain, transactionPool) {
+  constructor(blockchain, transactionPool, wallet) {
     this.sockets = [];
+    // TODO: can these values be included in the miner class?
     this.blockchain = blockchain;
     this.transactionPool = transactionPool;
+    this.wallet = wallet;
   }
 
   listen() {
@@ -47,6 +53,8 @@ class P2PChainServer {
   messageHandler(socket) {
     socket.on('message', message => {
       const data = JSON.parse(message);
+      // console.log('data', data);
+      // console.log('data.type', data.type);
 
       switch(data.type) {
         case MESSAGE_TYPES.chain:
@@ -54,11 +62,19 @@ class P2PChainServer {
           // attempt to replace the original chain with the received chain
           // the built-in functionality will actually replace the chain securely
           this.blockchain.replaceChain(data.chain);
+          break;
         case MESSAGE_TYPES.transaction:
           console.log('New transaction', data.transaction);
-          this.transactionPool.addTransaction(data.transaction);
+
+          // Create a transaction with the wallet to actually update it
+          // createTransaction(recipient, amount, blockchain, transactionPool) {
+          // this.wallet.createTransaction(recipient, amount, this.blockchain, this.transactionPool);
+          this.transactionPool.indexTransaction(data.transaction);
+
+          break;
         case MESSAGE_TYPES.clear_transactions:
           this.transactionPool.clear();
+          break;
       }
     });
   }
@@ -91,7 +107,9 @@ class P2PChainServer {
   }
 
   broadcastClearTransactions() {
-    this.sockets.forEach(socket => socket.send({ type: MESSAGE_TYPES.clear_transactions }));
+    this.sockets.forEach(socket => socket.send(JSON.stringify({
+      type: MESSAGE_TYPES.clear_transactions
+    })));
   }
 }
 

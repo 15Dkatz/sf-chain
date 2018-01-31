@@ -72,9 +72,9 @@ class Block {
       // nonce - a way to control how quickly blocks are mined
       // nonce++ must be first, otherwise the hash will be different
       nonce++;
-      hash = Block.hash(index, timestamp, lastHash, data, nonce);
       timestamp = Date.now();
       difficulty = Block.adjustDifficulty(lastBlock, timestamp);
+      hash = Block.hash(index, timestamp, lastHash, data, nonce, difficulty);
     } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
 
     return new this(index, timestamp, lastHash, hash, data, nonce, difficulty);
@@ -97,7 +97,7 @@ class Block {
   }
 
   static hash(index, timestamp, lastHash, data, nonce, difficulty) {
-    return CryptoUtil.hash({ index, timestamp, lastHash, data, nonce, difficulty });
+    return CryptoUtil.hash(`${index}${timestamp}${lastHash}${data}${nonce}${difficulty}`);
   }
 
   static blockHash(block) {

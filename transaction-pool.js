@@ -10,6 +10,17 @@ class TransactionPool {
     this.transactions.push(transaction);
   }
 
+  indexTransaction(transaction) {
+    // if a transaction at the transaction index exists, replace it. Otherwise, push it
+    let transactionAtId = this.transactions.find(t => t.id === transaction.id);
+
+    if (transactionAtId) {
+      this.transactions[this.transactions.indexOf(transactionAtId)] = transaction;
+    } else {
+      this.transactions.push(transaction);
+    }
+  }
+
   // check if a transaction has already been performed by this address
   existingTransaction(address) {
     return this.transactions.find(transaction => transaction.input.address === address);
@@ -27,7 +38,6 @@ class TransactionPool {
         return;
       }
 
-      // TODO: actually verify the signature of each transaction
       if (!Transaction.verifyTransaction(transaction)) {
         console.log(`Invalid signature from ${transaction.input.address}.`)
         return;
@@ -68,13 +78,6 @@ the transaction to the blockchain.
   - When a ndoe recived an unconfirmed transaction it has not seen before,
     it will broadcast its full transaction pool to all peers.
   - When a node first connects to another node, it will uery the transaction pool of that node.
-
-Validating received unconfirmed transactions:
-
-As the peers can send any kind of transaction, there must be validation before they're added to the transaction pools.
-There is an additional rule, beyond correct format, inputs, outputs and signatures:
-  - a transaction cannot be added to the pool if any of the transaction inputs are already found in the existing transaction pool.
-    - what does this enforce...? One transaction per address per block...? Does it prevent some kind of bad behavior?
 
 Now add the transactions to the block. When a node starts to mine a block, it will include the transactions from the
 transaction pool to the new block candidate. The transactions are already validates, so no further validation is needed.

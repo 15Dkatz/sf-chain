@@ -3,6 +3,7 @@ const { MINER_REWARD } = require('./config');
 
 class Transaction {
   constructor() {
+    this.index = CryptoUtil.timeId();
     this.input = null;
     this.outputs = [];
     // this.type [regular|fee|reward]
@@ -14,7 +15,7 @@ class Transaction {
       if (output.address === address) {
         return total + output.amount;
       } else { return total + 0 }
-    }, 0);;
+    }, 0);
   }
 
   // unique to this implementation...

@@ -18,6 +18,7 @@ const Blockchain = require('./blockchain');
 const TransactionPool = require('./transaction-pool');
 const Wallet = require('./wallet');
 const P2PChainServer = require('./p2p-chain-server');
+const Miner = require('./miner');
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 
@@ -25,7 +26,8 @@ const bc = new Blockchain();
 const tp = new TransactionPool();
 const wallet = new Wallet();
 const app = express();
-const p2pChainServer = new P2PChainServer(bc);
+const p2pChainServer = new P2PChainServer(bc, tp, wallet);
+const miner = new Miner(bc, tp, wallet, p2pChainServer);
 
 app.use(bodyParser.json());
 
@@ -33,21 +35,27 @@ app.get('/blocks', (req, res) => {
   res.json(bc.chain);
 });
 
+app.get('/mine-transactions', (req, res) => {
+  const block = miner.mine();
+  console.log(`New block added: ${block.toString()}`);
+
+  res.redirect('/blocks');
+});
+
+app.get('/balance', (req, res) => {
+  res.json({ balance: wallet.calculateBalance(bc) });
+});
+
 app.post('/mine', (req, res) => {
-  const newBlock = bc.addBlock(req.body.data);
+  const block = bc.addBlock(req.body.data);
   p2pChainServer.syncChains();
-
-  // broadcast the new block to all peers
-  // something like p2pChainServer.broadcast
-
-  console.log(`New block added: ${newBlock.toString()}`);
+  console.log(`New block added: ${block.toString()}`);
 
   res.redirect('/blocks');
 });
 
 app.post('/transact', (req, res) => {
   const { recipient, amount } = req.body;
-
   const transaction = wallet.createTransaction(recipient, amount, bc, tp);
 
   // store transactions on the block itself.

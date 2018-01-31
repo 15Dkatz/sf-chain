@@ -65,7 +65,8 @@ class Wallet {
       transactionPool.addTransaction(transaction);
     }
 
-    this.balance = this.calculateBalance(blockchain, transactionPool);
+    // Why is this here? TODO: check if necessary
+    // this.balance = this.calculateBalance(blockchain, transactionPool);
 
     return transaction;
   }

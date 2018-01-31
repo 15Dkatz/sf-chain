@@ -21,10 +21,13 @@ class Miner {
     const validTransactions = this.transactionPool.grabValidTransactions();
     validTransactions.unshift(Transaction.rewardTransaction(this.wallet));
 
-    this.blockchain.addBlock(validTransactions);
+    const block = this.blockchain.addBlock(validTransactions);
+    this.p2pChainServer.syncChains();
     // once the block is added, clear the transactionPool allowing everyone to reset
     // after all, shouldn't everyone get an updated transaction pool list?
     this.p2pChainServer.broadcastClearTransactions();
+
+    return block;
   }
 }
 

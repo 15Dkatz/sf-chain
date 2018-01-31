@@ -10,9 +10,7 @@ class Blockchain {
 
   addBlock(data) {
     const block = Block.mineBlock(this.lastBlock(), data);
-
     this.chain.push(block);
-
     return block;
   }
 
@@ -62,7 +60,8 @@ class Blockchain {
       const lastBlock = chain[i-1];
 
       if (
-        block.lastHash !== lastBlock.hash ||
+        block.lastHash !== lastBlock.hash
+        ||
         // this part ensures that a connecting node to the blockchain doesn't
         // have an improper hash function calculator
         block.hash !== Block.blockHash(block)
