@@ -8,16 +8,7 @@ class Transaction {
     this.outputs = [];
   }
 
-  // balanceByAddress(address) {
-  //   return this.outputs.reduce((total, output) => {
-  //     // TODO: a way to condense this?
-  //     if (output.address === address) {
-  //       return total + output.amount;
-  //     } else { return total + 0 }
-  //   }, 0);
-  // }
-
-  // unique to this implementation...
+  // unique to this implementation:
   update(senderWallet, recipient, amount) {
     // update the sender's output amount based off the new receiving output
     const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey);
