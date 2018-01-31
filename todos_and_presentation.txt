@@ -1,27 +1,10 @@
 * Have a demo in the beginning to show off the capabilities.
 * Extend to a Node AND React app <-- expose a frontend to the API.
 * Dockerize the app eventually.
-* Harder Proof of Work algorithms?
 * Extend these concepts to explanation videos.
 * Explain the inspiration from https://github.com/dvf/blockchain/blob/master/blockchain.py, and then I implemented it in JS
 * More inspiration from https://lhartikk.github.io/jekyll/update/2017/07/14/chapter1.html
 * Sha cryptography from https://github.com/brix/crypto-js
-
-* Add a transaction validation mechanism (cryptocurrency)
-TODO: This still doesn't have a transaction validation mechanism
-Can read about bitcoin and develop one though - this doesn't have to be accurate
-since it's my own implementation. It won't match how Bitcoin does it. I can safely
-bet that it will be super simplified. But it gets the idea across.
-
-#### P2P connection and chain-sync proof:
-one tab: `HTTP_PORT=3001 P2P_PORT=5001 npm run dev`
-x2-3: `http://localhost:3001/mine`
-another tab: `HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 npm run dev`
-Notice the syncage.
-Visit: `localhost:3002/blocks`
-Visit: `localhost:3000`/blocks`
-Then add mine a new block: `http://localhost:3001/mine`
-Notice the syncage.
 
 * Give a history of bitcoin, and talk about how long it will take to mine the 100 coins
 * Make this upbeat - and YouTubeAble (with highlights/callouts and music)
@@ -33,15 +16,12 @@ TODO:
 * Dockerize a multi-node container in order to start up multiple nodes
 * TODO: find 2 other tutorials. Go through them. Then make an implementation that takes the best of all 3.
 * transactions and rewards on mining
-* do we have to test the p2p-chain-server, and the main app? Yes. but how?
-* how to *publicly* announce transactions?
+
 
 
 * TODO place app and p2p-chain-server in app/
 * rename app to main.js
 * place blockchain and block into a blockchain/ dir
 * place transaction-related files like transaction and wallet into a transaction/ dir
-
-1/29/18
-* TODO: mining reward
-* Verify transactions using the signature somehow
+* Test the transaction, wallet, and transactionPool?
+* Test the app, and p2p-chain-server? If not, nbd.
