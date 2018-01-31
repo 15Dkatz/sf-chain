@@ -29,6 +29,17 @@ describe('Transaction', () => {
       expect(transaction.outputs.find(output => output.address === recipient).amount)
         .toEqual(amount);
     });
+
+    describe('validation', () => {
+      it('validates a valid transaction', () => {
+        expect(Transaction.verifyTransaction(transaction)).toBe(true);
+      });
+
+      it('invalidates a corrupt transactin', () => {
+        transaction.outputs[0].amount = 50000;
+        expect(Transaction.verifyTransaction(transaction)).toBe(false);
+      });
+    });
   });
 
   describe('creating a reward transaction', () => {
