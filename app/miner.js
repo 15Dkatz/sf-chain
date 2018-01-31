@@ -1,7 +1,7 @@
 // Every miner class will have a blockchain and a transactionPool
 // It's primary job is to add blocks to the chain consisting of the transactions in the transaction pool
 // then it empties the transactionPool
-const Transaction = require('./transaction');
+const Transaction = require('../wallet/transaction');
 
 class Miner {
   constructor(blockchain, transactionPool, wallet, p2pChainServer) {
@@ -23,8 +23,9 @@ class Miner {
 
     const block = this.blockchain.addBlock(validTransactions);
     this.p2pChainServer.syncChains();
-    // once the block is added, clear the transactionPool allowing everyone to reset
-    // after all, shouldn't everyone get an updated transaction pool list?
+    // once the block is added, clear the transactionPool, and broadcast a clear allowing everyone to reset.
+    // After all, shouldn't everyone get an updated transaction pool list?
+    this.transactionPool.clear();
     this.p2pChainServer.broadcastClearTransactions();
 
     return block;

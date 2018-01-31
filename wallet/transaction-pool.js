@@ -1,5 +1,5 @@
 // store the unconfirmed transactions
-const Transaction = require('./transaction');
+const Transaction = require('../wallet/transaction');
 
 class TransactionPool {
   constructor() {

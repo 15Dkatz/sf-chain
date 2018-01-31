@@ -20,9 +20,9 @@
  */
 
 const CryptoJS = require('crypto-js');
-const CryptoUtil = require('./crypto-util');
+const CryptoUtil = require('../crypto-util');
 const Transaction = require('./transaction');
-const { INITIAL_BALANCE } = require('./config');
+const { INITIAL_BALANCE } = require('../config');
 
 class Wallet {
   constructor() {

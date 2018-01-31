@@ -1,5 +1,5 @@
-const CryptoUtil = require('./crypto-util');
-const { MINING_REWARD } = require('./config');
+const CryptoUtil = require('../crypto-util');
+const { MINING_REWARD } = require('../config');
 
 class Transaction {
   constructor() {

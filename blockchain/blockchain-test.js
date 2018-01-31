@@ -1,13 +1,11 @@
 const Block = require('./block');
 const Blockchain = require('./blockchain');
-// TODO: what is a useful way to test this. API?
-// Testing:
+
 let bc = new Blockchain();
 bc.addBlock('foo');
 bc.addBlock('bar');
 bc.addBlock('zab');
-// TODO: prove the isValidChain functionality somehow.
-// TODO: test the genesis case
+
 console.log(bc.toString());
 console.log(`Original bc (blockchain) is a valid chain: ${bc.isValidChain(bc.chain)}`);
 

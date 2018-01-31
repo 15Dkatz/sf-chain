@@ -25,8 +25,8 @@
 // There are multiple conventions for instantiation.
 // But the `static` approach is nice since you don't have to explitcly call `new`.
 
-const CryptoUtil = require('./crypto-util');
-const { DIFFICULTY } = require('./config');
+const CryptoUtil = require('../crypto-util');
+const { DIFFICULTY } = require('../config');
 
 class Block {
   constructor(index, timestamp, lastHash, hash, data, nonce, difficulty) {

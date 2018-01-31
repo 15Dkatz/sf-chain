@@ -5,8 +5,8 @@
   "main": "blockchain.js",
   "scripts": {
     "test": "jest --watchAll",
-    "start": "node app.js",
-    "dev": "nodemon app.js",
+    "start": "node ./app/main.js",
+    "dev": "nodemon ./app/main.js",
     "blockchain-dev": "nodemon blockchain-test.js",
     "wallet-dev": "nodemon wallet-test.js"
   },
