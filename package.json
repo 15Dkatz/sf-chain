@@ -4,7 +4,7 @@
   "description": "",
   "main": "blockchain.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watchAll",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "blockchain-dev": "nodemon blockchain-test.js",
@@ -29,6 +29,7 @@
     "crypto-js": "^3.1.9-1",
     "elliptic": "^6.4.0",
     "express": "^4.16.2",
+    "jest": "^22.1.4",
     "uuid": "^3.2.1",
     "ws": "^4.0.0"
   }

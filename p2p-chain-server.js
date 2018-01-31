@@ -53,9 +53,6 @@ class P2PChainServer {
   messageHandler(socket) {
     socket.on('message', message => {
       const data = JSON.parse(message);
-      // console.log('data', data);
-      // console.log('data.type', data.type);
-
       switch(data.type) {
         case MESSAGE_TYPES.chain:
           // const receivedChain = JSON.parse(message);
@@ -65,12 +62,8 @@ class P2PChainServer {
           break;
         case MESSAGE_TYPES.transaction:
           console.log('New transaction', data.transaction);
-
           // Create a transaction with the wallet to actually update it
-          // createTransaction(recipient, amount, blockchain, transactionPool) {
-          // this.wallet.createTransaction(recipient, amount, this.blockchain, this.transactionPool);
-          this.transactionPool.indexTransaction(data.transaction);
-
+          this.transactionPool.updateOrAddTransaction(data.transaction);
           break;
         case MESSAGE_TYPES.clear_transactions:
           this.transactionPool.clear();
