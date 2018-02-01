@@ -3,11 +3,8 @@
 
   PRIVATE KEY Store the key by writing it to a file? Or just save it in the class.
   Writing to a file seems good if you want the user to explicitly see the key. But it may be unnecessary. Also very unsafe.
-
   PUBLIC KEY: The public key can then be derived from the private key.
-
   BALANCE: When own coins, what you have is a list of unspent transactions. Get the sum of that amount.
-
   TRANSACTIONS: If A wants to send 40 of his/her 50 coins to B, then 40 is sent to A and 10 is sent to B.
 
   Two outputs are created for the receiver, and one for the leftover amount of the sender.
@@ -62,9 +59,6 @@ class Wallet {
       transaction = Transaction.normalTransaction(this, recipient, amount);
       transactionPool.addTransaction(transaction);
     }
-
-    // Why is this here? TODO: check if necessary
-    // this.balance = this.calculateBalance(blockchain, transactionPool);
 
     return transaction;
   }

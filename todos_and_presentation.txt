@@ -24,6 +24,9 @@ TODO:
 * Test the transaction, wallet, and transactionPool?
 * Test the app, and p2p-chain-server? If not, nbd.
 
+* Strategy?
+* Record and release the blockchain section first, and have the transaction section pending
+
 /*
 POSTMAN TEST
 First run one node
