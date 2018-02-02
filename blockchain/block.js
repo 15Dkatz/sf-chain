@@ -57,7 +57,7 @@ class Block {
   // Why static? Why not declare outside of the class?
   // Nice to be able to share functionality under the Block namespace.
   static genesis() {
-    return new this(0, 'Genesis time', '-----', 'f1rSt-h4sh', [], 0, DIFFICULTY);
+    return new this('Genesis time', '-----', 'f1r57-h45h', [], 0, DIFFICULTY);
   }
 
   // note that this includes the proof-of-work algorithm
