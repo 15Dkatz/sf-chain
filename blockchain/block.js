@@ -29,10 +29,10 @@ const ChainUtil = require('../chain-util');
 const { DIFFICULTY } = require('../config');
 
 class Block {
-  constructor(index, timestamp, lastHash, hash, data, nonce, difficulty) {
+  constructor(timestamp, lastHash, hash, data, nonce, difficulty) {
     // TODO: is the index part necessary?
     // yes the index is necessary to check additions of new blocks from multiple decentralized peers
-    this.index = index;
+    // this.index = index;
     this.timestamp = timestamp;
     // the hash enforces the chain
     // each hash for each block is generated based off the lastHash.
@@ -47,7 +47,6 @@ class Block {
 
   toString() {
     return `Block -
-      Index     : ${this.index}
       Timestamp : ${this.timestamp}
       Last Hash : ${this.lastHash.substring(0, 10)}
       Hash      : ${this.hash.substring(0, 10)}
@@ -63,7 +62,7 @@ class Block {
 
   // note that this includes the proof-of-work algorithm
   static mineBlock(lastBlock, data) {
-    const index = lastBlock.index+1;
+    // const index = lastBlock.index+1;
     const lastHash = lastBlock.hash;
     let { difficulty } = lastBlock;
     let hash, timestamp;
@@ -75,10 +74,10 @@ class Block {
       nonce++;
       timestamp = Date.now();
       difficulty = Block.adjustDifficulty(lastBlock, timestamp);
-      hash = Block.hash(index, timestamp, lastHash, data, nonce, difficulty);
+      hash = Block.hash(timestamp, lastHash, data, nonce, difficulty);
     } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
 
-    return new this(index, timestamp, lastHash, hash, data, nonce, difficulty);
+    return new this(timestamp, lastHash, hash, data, nonce, difficulty);
   }
 
   static adjustDifficulty(lastBlock, currentTime) {
@@ -97,13 +96,13 @@ class Block {
     return difficulty;
   }
 
-  static hash(index, timestamp, lastHash, data, nonce, difficulty) {
-    return ChainUtil.hash(`${index}${timestamp}${lastHash}${data}${nonce}${difficulty}`);
+  static hash(timestamp, lastHash, data, nonce, difficulty) {
+    return ChainUtil.hash(`${timestamp}${lastHash}${data}${nonce}${difficulty}`);
   }
 
   static blockHash(block) {
-    const { index, timestamp, lastHash, data, nonce, difficulty } = block;
-    return Block.hash(index, timestamp, lastHash, data, nonce, difficulty);
+    const { timestamp, lastHash, data, nonce, difficulty } = block;
+    return Block.hash(timestamp, lastHash, data, nonce, difficulty);
   }
 }
 
