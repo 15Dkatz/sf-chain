@@ -25,7 +25,7 @@
 // There are multiple conventions for instantiation.
 // But the `static` approach is nice since you don't have to explitcly call `new`.
 
-const CryptoUtil = require('../crypto-util');
+const ChainUtil = require('../chain-util');
 const { DIFFICULTY } = require('../config');
 
 class Block {
@@ -98,7 +98,7 @@ class Block {
   }
 
   static hash(index, timestamp, lastHash, data, nonce, difficulty) {
-    return CryptoUtil.hash(`${index}${timestamp}${lastHash}${data}${nonce}${difficulty}`);
+    return ChainUtil.hash(`${index}${timestamp}${lastHash}${data}${nonce}${difficulty}`);
   }
 
   static blockHash(block) {

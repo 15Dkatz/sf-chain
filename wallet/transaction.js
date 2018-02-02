@@ -1,9 +1,9 @@
-const CryptoUtil = require('../crypto-util');
+const ChainUtil = require('../chain-util');
 const { MINING_REWARD } = require('../config');
 
 class Transaction {
   constructor() {
-    this.index = CryptoUtil.timeId();
+    this.index = ChainUtil.timeId();
     this.input = null;
     this.outputs = [];
   }
@@ -29,15 +29,15 @@ class Transaction {
     transaction.input = {
       amount: senderWallet.balance,
       address: senderWallet.publicKey,
-      signature: senderWallet.sign(CryptoUtil.hash(transaction.outputs))
+      signature: senderWallet.sign(ChainUtil.hash(transaction.outputs))
     };
   }
 
   static verifyTransaction(transaction) {
-    const verified = CryptoUtil.verifySignature(
+    const verified = ChainUtil.verifySignature(
       transaction.input.address,
       transaction.input.signature,
-      CryptoUtil.hash(transaction.outputs)
+      ChainUtil.hash(transaction.outputs)
     )
 
     return verified;

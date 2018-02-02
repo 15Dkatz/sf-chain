@@ -17,7 +17,7 @@
  */
 
 const CryptoJS = require('crypto-js');
-const CryptoUtil = require('../crypto-util');
+const ChainUtil = require('../chain-util');
 const Transaction = require('./transaction');
 const { INITIAL_BALANCE } = require('../config');
 
@@ -31,7 +31,7 @@ class Wallet {
   }
 
   generateKeys() {
-    this.keyPair = CryptoUtil.genKeyPair();
+    this.keyPair = ChainUtil.genKeyPair();
     this.publicKey = this.keyPair.getPublic().encode('hex');
   }
 
