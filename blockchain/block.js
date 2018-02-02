@@ -61,6 +61,7 @@ class Block {
     return new this(0, 'Genesis time', '-----', 'f1rSt-h4sh', [], 0, DIFFICULTY);
   }
 
+  // note that this includes the proof-of-work algorithm
   static mineBlock(lastBlock, data) {
     const index = lastBlock.index+1;
     const lastHash = lastBlock.hash;

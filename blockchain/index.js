@@ -69,6 +69,9 @@ class Blockchain {
       ) {
         return false;
       }
+
+      // !!! TODO: Should the isValidChain also do the transaction check?
+      // Something like if block.type === 'transaction' verify transactions...?
     }
 
     return true;
