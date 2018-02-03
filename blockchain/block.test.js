@@ -2,12 +2,15 @@ const Block = require('./block');
 const { DIFFICULTY } = require('../config');
 
 describe('Block', () => {
-  let data;
-  let block;
+  let data, block;
 
   beforeEach(() => {
     data = 'bar';
     block = Block.mineBlock(Block.genesis(), data);
+  });
+
+  it('sets the `data` to match the input', () => {
+    expect(block.data).toEqual(data);
   });
 
   it('sets `lastHash` to match the hash of the last block', () => {
