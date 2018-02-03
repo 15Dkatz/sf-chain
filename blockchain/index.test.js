@@ -45,4 +45,12 @@ describe('Blockchain', () => {
 
     expect(bc.chain).toEqual(bc2.chain);
   });
+
+  it('does not replace the chain with one of less than or equal length', () => {
+    bc.addBlock('foo');
+    const bcLength = bc.chain.length;
+    bc.replaceChain(bc2.chain);
+
+    expect(bc.chain.length).toEqual(bcLength);
+  });
 });

@@ -72,6 +72,7 @@ app.get('/public-key', (req, res) => {
   res.json({ publicKey: wallet.publicKey });
 });
 
+// TODO: is this ever used...? I don't think so.
 app.get('/peers', (req, res) => {
   // res.json({
   //   peers: p2pChainServer.sockets.map(socket => socket._socket.address())
