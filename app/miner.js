@@ -4,11 +4,11 @@
 const Transaction = require('../wallet/transaction');
 
 class Miner {
-  constructor(blockchain, transactionPool, wallet, p2pChainServer) {
+  constructor(blockchain, transactionPool, wallet, p2pServer) {
     this.blockchain = blockchain;
     this.transactionPool = transactionPool;
     this.wallet = wallet;
-    this.p2pChainServer = p2pChainServer;
+    this.p2pServer = p2pServer;
   }
 
   // This really brings everything together
@@ -22,11 +22,11 @@ class Miner {
     validTransactions.unshift(Transaction.rewardTransaction(this.wallet));
 
     const block = this.blockchain.addBlock(validTransactions);
-    this.p2pChainServer.syncChains();
+    this.p2pServer.syncChains();
     // once the block is added, clear the transactionPool, and broadcast a clear allowing everyone to reset.
     // After all, shouldn't everyone get an updated transaction pool list?
     this.transactionPool.clear();
-    this.p2pChainServer.broadcastClearTransactions();
+    this.p2pServer.broadcastClearTransactions();
 
     return block;
   }

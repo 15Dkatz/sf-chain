@@ -1,6 +1,10 @@
-// Before peer to peer functionality...
-// Proof of work
-// Develop the API
+// HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 npm run dev
+
+// the same code serves two purposes - one starts the original server
+// it also has code that allows it to connect to a websocket server if peers are designated for it
+
+// you want every connected socket server to have the full array of sockets.
+// That way, they all have the capability to send messages to the full list of connections.
 
 const Websocket = require('ws');
 const P2P_PORT = process.env.P2P_PORT || 5001;
@@ -12,10 +16,9 @@ const MESSAGE_TYPES = {
   clear_transactions: 'CLEAR_TRANSACTIONS'
 };
 
-class P2PChainServer {
+class P2pServer {
   constructor(blockchain, transactionPool, wallet) {
     this.sockets = [];
-    // TODO: can these values be included in the miner class?
     this.blockchain = blockchain;
     this.transactionPool = transactionPool;
     this.wallet = wallet;
@@ -23,17 +26,26 @@ class P2PChainServer {
 
   listen() {
     const server = new Websocket.Server({ port: P2P_PORT });
+    // ** when other sockets connect to this P2P_PORT, this event listener will fire
+    // this creates a socket object representing the new socket connection that the original socket will push to its array of sockets.
+
     server.on('connection', socket => this.connectSocket(socket));
     this.connectToPeers();
     console.log(`Listening for peer to peer connections on: ${P2P_PORT}`);
   }
 
+  connectToPeers() {
+    // peers are declared when the server is started through an environment variable.
+    peers.forEach(peer => {
+      const socket = new Websocket(peer);
+      socket.on('open', () => this.connectSocket(socket));
+      // socket.on('error', () => console.log('connection failed'));
+    });
+  }
+
   connectSocket(socket) {
     this.sockets.push(socket);
     this.messageHandler(socket);
-    // TODO: necessary to include?
-    // this.errorHandler(socket);
-    // is there a socket sendJson method?
     this.sendChain(socket);
   }
 
@@ -82,15 +94,6 @@ class P2PChainServer {
   //   socket.on('error', () => closeConnection(socket));
   // }
 
-  connectToPeers() {
-    peers.forEach(peer => {
-      const socket = new Websocket(peer);
-
-      socket.on('open', () => this.connectSocket(socket));
-      socket.on('error', () => console.log('connection failed'));
-    });
-  }
-
   syncChains() {
     this.sockets.forEach(socket => this.sendChain(socket));
   }
@@ -106,4 +109,4 @@ class P2PChainServer {
   }
 }
 
-module.exports = P2PChainServer;
+module.exports = P2pServer;

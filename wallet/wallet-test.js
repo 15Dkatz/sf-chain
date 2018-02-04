@@ -2,12 +2,12 @@ const Blockchain = require('../blockchain');
 const Wallet = require('./index');
 const TransactionPool = require('../app/transaction-pool');
 const Miner = require('../app/miner');
-const P2pChainServer = require('../app/p2p-chain-server');
+const P2pServer = require('../app/p2p-chain-server');
 
 const blockchain = new Blockchain();
 const tp = new TransactionPool();
 const wallet = new Wallet();
-const p2p = new P2pChainServer();
+const p2p = new P2pServer();
 
 const miner = new Miner(blockchain, tp, wallet, p2p);
 
