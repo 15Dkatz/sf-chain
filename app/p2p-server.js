@@ -1,4 +1,4 @@
-// HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 npm run dev
+// HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 npm run dev
 
 // the same code serves two purposes - one starts the original server
 // it also has code that allows it to connect to a websocket server if peers are designated for it
@@ -37,6 +37,7 @@ class P2pServer {
   connectToPeers() {
     // peers are declared when the server is started through an environment variable.
     peers.forEach(peer => {
+      // this actually makes the websocket connection
       const socket = new Websocket(peer);
       socket.on('open', () => this.connectSocket(socket));
       // socket.on('error', () => console.log('connection failed'));
