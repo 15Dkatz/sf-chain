@@ -91,7 +91,7 @@ class Block {
       test by creating a for loop up to 100 and watching the difficulty
     */
     let { difficulty } = lastBlock;
-    difficulty = lastBlock.timestamp + 1000 > currentTime ? difficulty + 1 : difficulty - 1;
+    difficulty = lastBlock.timestamp + 5000 > currentTime ? difficulty + 1 : difficulty - 1;
 
     return difficulty;
   }
