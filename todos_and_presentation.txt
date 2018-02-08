@@ -11,12 +11,6 @@
 * Have it scroll over the bitcoin.pdf
 
 
-TODO:
-* replace log tests with a Jest test suite and runner for each class
-* Dockerize a multi-node container in order to start up multiple nodes
-* TODO: find 2 other tutorials. Go through them. Then make an implementation that takes the best of all 3.
-* transactions and rewards on mining
-
 * TODO place app and p2p-chain-server in app/
 * rename app to main.js
 * place blockchain and block into a blockchain/ dir

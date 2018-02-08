@@ -14,10 +14,6 @@ class Miner {
   // This really brings everything together
   // It connects the transactionPool, the blockchain, and soon the p2pServer
   mine() {
-    /* TODO: should the mining part be extracted here? Through a spawned thread, so transactions can be added to the pool in the background?
-      Or should it remain in the actual Block class? <-- this definitely simplifies things in terms of generating the correct hash.
-    */
-
     const validTransactions = this.transactionPool.grabValidTransactions();
     validTransactions.unshift(Transaction.rewardTransaction(this.wallet));
 
