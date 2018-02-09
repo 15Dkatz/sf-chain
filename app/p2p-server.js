@@ -26,9 +26,6 @@ class P2pServer {
 
   listen() {
     const server = new Websocket.Server({ port: P2P_PORT });
-    // ** when other sockets connect to this P2P_PORT, this event listener will fire
-    // this creates a socket object representing the new socket connection that the original socket will push to its array of sockets.
-
     server.on('connection', socket => this.connectSocket(socket));
     this.connectToPeers();
     console.log(`Listening for peer to peer connections on: ${P2P_PORT}`);
@@ -40,7 +37,6 @@ class P2pServer {
       // this actually makes the websocket connection
       const socket = new Websocket(peer);
       socket.on('open', () => this.connectSocket(socket));
-      // socket.on('error', () => console.log('connection failed'));
     });
   }
 

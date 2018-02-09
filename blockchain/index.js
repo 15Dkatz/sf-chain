@@ -1,6 +1,3 @@
-// Object-Oriented
-// Explain skeleton-based coding philosophy - fill things out bit by bit
-
 const Block = require('./block');
 
 class Blockchain {
@@ -33,26 +30,11 @@ class Blockchain {
       return;
     }
 
-    // Seems like bitcoin actually prefers the longest chain
-    // There are also implementations with the highest accumulated difficulty. Which one is preferred?
-    // if (this.accumulatedDifficulty(this.chain) > this.accumulatedDifficulty(newChain)) {
-    //   console.log('The received chain has a lower difficulty than this chain.');
-    //   return;
-    // }
-
     console.log('Replacing blockchain with the new chain.');
     this.chain = newChain;
   }
 
 
-  /*
-    Why this is necessary:
-    When other nodes attempt to contribute to the blockchain, we must make sure
-    that their blocks match our chain. If the proposed block's hash doesn't
-    match our calculation, then it rejects too.
-
-    chain is an array of blocks
-  */
   isValidChain(chain) {
     if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) return false;
     // then validate every following block
@@ -69,9 +51,6 @@ class Blockchain {
       ) {
         return false;
       }
-
-      // !!! TODO: Should the isValidChain also do the transaction check?
-      // Something like if block.type === 'transaction' verify transactions...?
     }
 
     return true;

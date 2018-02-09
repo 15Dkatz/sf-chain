@@ -1,26 +1,3 @@
-* Have a demo in the beginning to show off the capabilities.
-* Extend to a Node AND React app <-- expose a frontend to the API.
-* Dockerize the app eventually.
-* Extend these concepts to explanation videos.
-* Explain the inspiration from https://github.com/dvf/blockchain/blob/master/blockchain.py, and then I implemented it in JS
-* More inspiration from https://lhartikk.github.io/jekyll/update/2017/07/14/chapter1.html
-* Sha cryptography from https://github.com/brix/crypto-js
-
-* Give a history of bitcoin, and talk about how long it will take to mine the 100 coins
-* Make this upbeat - and YouTubeAble (with highlights/callouts and music)
-* Have it scroll over the bitcoin.pdf
-
-
-* TODO place app and p2p-chain-server in app/
-* rename app to main.js
-* place blockchain and block into a blockchain/ dir
-* place transaction-related files like transaction and wallet into a transaction/ dir
-* Test the transaction, wallet, and transactionPool?
-* Test the app, and p2p-chain-server? If not, nbd.
-
-* Strategy?
-* Record and release the blockchain section first, and have the transaction section pending
-
 /*
 POSTMAN TEST
 First run one node

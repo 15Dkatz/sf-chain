@@ -19,9 +19,6 @@ corruptChain[2].data = 'bad data';
 console.log('Removing the last block...');
 bc.chain.splice(bc.chain.length-1, 1);
 
-// In presentation, let this print false first, and then make it valid after
-// successfully deep cloning the chain. Then re-corrupt it.
-// console.log(`Will a corrupt chain be valid: ${bc.isValidChain(corruptChain)}`);
 console.log('Will a corrupt chain replace the current chain?\nCalling: bc.replaceChain(corruptChain)...');
 bc.replaceChain(corruptChain);
 
@@ -34,8 +31,6 @@ newValidChain.push(Block.mineBlock(newValidChain[newValidChain.length-1], 'goo')
 console.log('Will a new valid chain replace the block chain?\nCalling bc.replaceChain(newValidChain)...');
 bc.replaceChain(newValidChain);
 console.log(bc.toString());
-
-// TODO: construct a 'proof of work' proof, that shows it's actually taking time to do the mining
 
 const loops = 5;
 console.log(`Demonstrating adjusting difficulty for ${loops} blocks
