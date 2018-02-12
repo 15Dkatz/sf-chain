@@ -15,6 +15,7 @@ class Miner {
   // It connects the transactionPool, the blockchain, and soon the p2pServer
   mine() {
     const validTransactions = this.transactionPool.grabValidTransactions();
+    // place a reward transaction at the front
     validTransactions.unshift(Transaction.rewardTransaction(this.wallet));
 
     const block = this.blockchain.addBlock(validTransactions);

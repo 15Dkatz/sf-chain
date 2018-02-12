@@ -12,10 +12,10 @@ class TransactionPool {
 
   updateOrAddTransaction(transaction) {
     // if a transaction at the transaction index exists, replace it. Otherwise, push it
-    let transactionAtId = this.transactions.find(t => t.id === transaction.id);
+    let transactionWithId = this.transactions.find(t => t.id === transaction.id);
 
-    if (transactionAtId) {
-      this.transactions[this.transactions.indexOf(transactionAtId)] = transaction;
+    if (transactionWithId) {
+      this.transactions[this.transactions.indexOf(transactionWithId)] = transaction;
     } else {
       this.transactions.push(transaction);
     }
