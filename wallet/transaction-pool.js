@@ -12,10 +12,10 @@ class TransactionPool {
 
   updateOrAddTransaction(transaction) {
     // if a transaction at the transaction index exists, replace it. Otherwise, push it
-    let transactionWithId = this.transactions.find(t => t.id === transaction.id);
+    let transactionWithIndex = this.transactions.find(t => t.index === transaction.index);
 
-    if (transactionWithId) {
-      this.transactions[this.transactions.indexOf(transactionWithId)] = transaction;
+    if (transactionWithIndex) {
+      this.transactions[this.transactions.indexOf(transactionWithIndex)] = transaction;
     } else {
       this.transactions.push(transaction);
     }
@@ -26,9 +26,9 @@ class TransactionPool {
     return this.transactions.find(transaction => transaction.input.address === address);
   }
 
-  grabValidTransactions() {
+  validTransactions() {
     // make sure the input amount of each transaction is equal to the output amounts
-    const validTransactions = this.transactions.map(transaction => {
+    const validTransactions = this.transactions.filter(transaction => {
       const outputTotal = transaction.outputs.reduce((total, output) => {
         return total + output.amount;
       }, 0);

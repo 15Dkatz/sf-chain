@@ -23,6 +23,8 @@ class Transaction {
 
     // resign the updated transaction, will only work from the original sender
     Transaction.signTransaction(this, senderWallet);
+
+    return this;
   }
 
   static signTransaction(transaction, senderWallet) {
