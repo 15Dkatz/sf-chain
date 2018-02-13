@@ -3,7 +3,7 @@ const { MINING_REWARD } = require('../config');
 
 class Transaction {
   constructor() {
-    this.index = ChainUtil.timeId();
+    this.index = ChainUtil.id();
     this.input = null;
     this.outputs = [];
   }
@@ -27,6 +27,7 @@ class Transaction {
 
   static signTransaction(transaction, senderWallet) {
     transaction.input = {
+      timestamp: Date.now(),
       amount: senderWallet.balance,
       address: senderWallet.publicKey,
       signature: senderWallet.sign(ChainUtil.hash(transaction.outputs))

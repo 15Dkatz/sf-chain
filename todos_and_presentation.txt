@@ -8,7 +8,6 @@ $ curl http://localhost:3002/public-key
 grab value from ^^
 hit_transactions = ?
 $ hit_transactions * curl -d '{"address":"0429d6c26410c83f725609426ed63b0b6f8cdfe2a7414deab02bfefa53fa2b30d458bd6901fee6272ff373f1adec6f4f28e57b25c0f1487d39890ab073f80bf5e8", "amount":"50"}' -H "Content-Type: application/json" -X POST http://localhost:3001/transact
-// TODO: Why does mine-transactions show an invalid value?
 $ curl http://localhost:3001/transactions
 $ curl http://localhost:3002/transactions
 $ curl http://localhost:3001/mine-transactions
@@ -18,3 +17,6 @@ $ curl http://localhost:3002/blocks
 $ curl http://localhost:3001/transactions
 $ curl http://localhost:3002/transactions
 */
+
+TODO:
+* test the transaction pool

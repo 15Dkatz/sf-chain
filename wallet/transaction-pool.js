@@ -46,8 +46,6 @@ class TransactionPool {
       return transaction;
     });
 
-    console.log('validTransactions', validTransactions);
-
     return validTransactions;
   }
 

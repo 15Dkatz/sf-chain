@@ -23,9 +23,9 @@ const { INITIAL_BALANCE } = require('../config');
 
 class Wallet {
   constructor() {
+    this.balance = INITIAL_BALANCE;
     this.keyPair = null;
     this.publicKey = null; // address
-    this.balance = INITIAL_BALANCE;
 
     this.generateKeys();
   }
@@ -43,7 +43,7 @@ class Wallet {
    * Add to the pool of unconfirmed transactions to be later verified in mining
    */
   createTransaction(recipient, amount, blockchain, transactionPool) {
-    this.balance = this.calculateBalance(blockchain, transactionPool);
+    this.balance = this.calculateBalance(blockchain);
 
     if (amount > this.balance) {
       console.log(`Amount: ${amount}, exceeds current balance: ${this.balance}`);
@@ -64,23 +64,42 @@ class Wallet {
   }
 
   /**
-   * Get the total transaction attributed to this key.
-   * It should be the amount of outputs attributed to this publicKey address in the given chain
+   * The balance is the sum total of output amounts matching their public key
+   * !!!after!!! their most recent transaction amount (where they have an input)
+   * If they don't have a recent transaction, add the sum total outputs to their current balance
    */
   calculateBalance(blockchain) {
-    // filter down to the outputs contained in the chain
-    let outputs = [];
+    let balance = this.balance;
+
+    let transactions = [];
     blockchain.chain.forEach(block => block.data.forEach(transaction => {
-      outputs = [...outputs, ...transaction.outputs];
+      transactions = [...transactions, transaction];
     }));
 
-    let balance = outputs.length > 0 ? outputs.reduce((total, output) => {
-      if (output.address === this.publicKey) {
-        return total + output.amount;
-      } else {
-        return total + 0;
+    const walletInputTs = transactions
+      .filter(transaction => transaction.input.address === this.publicKey);
+
+    // add all currency they have received after their recent transaction,
+    // or the default 0
+    let startTime = 0;
+    // set the balance to the amount of the most recent sender's transaction
+    if (walletInputTs.length > 0) {
+      const recentInputT = walletInputTs.reduce(
+        (prev, current) => prev.input.timestamp > current.input.timestamp ? prev : current
+      );
+      startTime = recentInputT.input.timestamp;
+      balance = recentInputT.outputs.find(output => output.address === this.publicKey).amount;
+    }
+
+    transactions.forEach(transaction => {
+      if (transaction.input.timestamp > startTime) {
+        transaction.outputs.forEach(output => {
+          if (output.address === this.publicKey) {
+            balance += output.amount;
+          }
+        });
       }
-    }, 0) : this.balance;
+    });
 
     return balance;
   }

@@ -27,7 +27,7 @@ class ChainUtil {
     return verified;
   }
 
-  static timeId() {
+  static id() {
     return uuidV1();
   }
 }
