@@ -13,12 +13,20 @@ describe('TransactionPool', () => {
     transaction = wallet.createTransaction('r4nd-4dr355', 30, bc, tp);
   });
 
-  // unnecessary
-  // it('adds a transaction', () => {
-  //   expect(tp.transactions.find(t => t.id === transaction.id)).toEqual(transaction);
-  // });
+  it('adds a transaction to the pool', () => {
+    expect(tp.transactions.find(t => t.id === transaction.id)).toEqual(transaction);
+  });
 
-  it('confirms that a transaction by the wallet exists', () => {
+  it('updates a transaction in the pool', () => {
+    const prevTransaction = JSON.stringify(transaction);
+    transaction = transaction.update(wallet, 'foo-4ddr355', 40);
+    tp.updateOrAddTransaction(transaction);
+
+    expect(JSON.stringify(tp.transactions.find(t => t.id === transaction.id)))
+      .not.toEqual(prevTransaction);
+  });
+
+  it('confirms that a transaction by a wallet exists', () => {
     expect(tp.existingTransaction(wallet.publicKey)).toEqual(transaction);
   });
 
@@ -26,13 +34,6 @@ describe('TransactionPool', () => {
     tp.clear();
 
     expect(tp.transactions).toEqual([]);
-  });
-
-  it('updates the transaction in the pool', () => {
-    transaction = transaction.update(wallet, 'foo-4ddr355', 40);
-    tp.updateOrAddTransaction(transaction);
-
-    expect(tp.transactions.find(t => t.id === transaction.id)).toEqual(transaction);
   });
 
   it('grabs valid transactions', () => {

@@ -30,7 +30,6 @@ describe('Transaction', () => {
       expect(transaction.input.amount).toEqual(wallet.balance);
     });
 
-    // describe('validation', () => {
     it('validates a valid transaction', () => {
       expect(Transaction.verifyTransaction(transaction)).toBe(true);
     });
@@ -39,19 +38,28 @@ describe('Transaction', () => {
       transaction.outputs[0].amount = 50000;
       expect(Transaction.verifyTransaction(transaction)).toBe(false);
     });
-    // });
   });
 
   describe('transacting with an amount that exceeds the balance', () => {
     beforeEach(() => {
       amount = 50000;
-      transaction = Transaction.newTransaction(wallet, recipient, amount);
+      transaction = Transaction.normalTransaction(wallet, recipient, amount);
     });
 
     it('does not create the transaction', () => {
       expect(transaction).toEqual(undefined);
     });
   });
+
+  // TODO: it/describes('updates the transaction', () => {});
+  // This is covered in the wallet test
+  // desribe('updating a transaction', () => {
+  //   beforeEach(() => {
+  //     transaction = transaction.update(wallet, 'new-4ddr355', 20);
+  //   });
+
+  //   it('')
+  // });
 
   describe('creating a reward transaction', () => {
     beforeEach(() => {
