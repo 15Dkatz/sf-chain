@@ -5,9 +5,7 @@ const TransactionPool = require('./transaction-pool');
 const { INITIAL_BALANCE } = require('../config');
 
 describe('Wallet', () => {
-  let wallet;
-  let bc;
-  let tp;
+  let wallet, bc, tp;
 
   beforeEach(() => {
     wallet = new Wallet();
@@ -16,9 +14,7 @@ describe('Wallet', () => {
   });
 
   describe('creating a transaction', () => {
-    let transaction;
-    let sendAmount;
-    let recipient;
+    let transaction, sendAmount, recipient;
 
     beforeEach(() => {
       sendAmount = 50;
