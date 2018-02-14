@@ -9,8 +9,10 @@ describe('TransactionPool', () => {
   beforeEach(() => {
     tp = new TransactionPool();
     wallet = new Wallet();
-    bc = new Blockchain();
-    transaction = wallet.createTransaction('r4nd-4dr355', 30, bc, tp);
+    // bc = new Blockchain();
+    // transaction = wallet.createTransaction('r4nd-4dr355', 30, bc, tp);
+    transaction = Transaction.normalTransaction(wallet, 'r4nd-4dr355', 30);
+    tp.updateOrAddTransaction(transaction);
   });
 
   it('adds a transaction to the pool', () => {
@@ -18,12 +20,12 @@ describe('TransactionPool', () => {
   });
 
   it('updates a transaction in the pool', () => {
-    const prevTransaction = JSON.stringify(transaction);
-    transaction = transaction.update(wallet, 'foo-4ddr355', 40);
-    tp.updateOrAddTransaction(transaction);
+    const oldTransaction = JSON.stringify(transaction);
+    const newTransaction = transaction.update(wallet, 'foo-4ddr355', 40);
+    tp.updateOrAddTransaction(newTransaction);
 
-    expect(JSON.stringify(tp.transactions.find(t => t.id === transaction.id)))
-      .not.toEqual(prevTransaction);
+    expect(JSON.stringify(tp.transactions.find(t => t.id === newTransaction.id)))
+      .not.toEqual(oldTransaction);
   });
 
   it('confirms that a transaction by a wallet exists', () => {
@@ -36,18 +38,19 @@ describe('TransactionPool', () => {
     expect(tp.transactions).toEqual([]);
   });
 
-  it('grabs valid transactions', () => {
-    const validTransactions = [...tp.transactions];
-    for (let i=0; i<6; i++) {
-      wallet = new Wallet();
-      transaction = wallet.createTransaction('r4nd-4dr355', 30, bc, tp);
-      if (i%2==0) {
-        transaction.input.amount = 999;
-      } else {
-        validTransactions.push(transaction);
-      }
-    }
+  // TODO: re-add once wallet.createTransaction conversion happens
+  // it('grabs valid transactions', () => {
+  //   const validTransactions = [...tp.transactions];
+  //   for (let i=0; i<6; i++) {
+  //     wallet = new Wallet();
+  //     transaction = wallet.createTransaction('r4nd-4dr355', 30, bc, tp);
+  //     if (i%2==0) {
+  //       transaction.input.amount = 999;
+  //     } else {
+  //       validTransactions.push(transaction);
+  //     }
+  //   }
 
-    expect(tp.validTransactions()).toEqual(validTransactions);
-  });
+  //   expect(tp.validTransactions()).toEqual(validTransactions);
+  // });
 });
