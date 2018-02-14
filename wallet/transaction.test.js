@@ -16,10 +16,6 @@ describe('Transaction', () => {
       transaction = Transaction.normalTransaction(wallet, recipient, amount);
     });
 
-    it('inputs the balance of the wallet', () => {
-      expect(transaction.input.address).toEqual(wallet.publicKey);
-    });
-
     it('ouputs the `amount` subtracted from the wallet balance', () => {
       expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
         .toEqual(wallet.balance - amount);
@@ -30,15 +26,30 @@ describe('Transaction', () => {
         .toEqual(amount);
     });
 
-    describe('validation', () => {
-      it('validates a valid transaction', () => {
-        expect(Transaction.verifyTransaction(transaction)).toBe(true);
-      });
+    it('inputs the balance of the wallet', () => {
+      expect(transaction.input.amount).toEqual(wallet.balance);
+    });
 
-      it('invalidates a corrupt transactin', () => {
-        transaction.outputs[0].amount = 50000;
-        expect(Transaction.verifyTransaction(transaction)).toBe(false);
-      });
+    // describe('validation', () => {
+    it('validates a valid transaction', () => {
+      expect(Transaction.verifyTransaction(transaction)).toBe(true);
+    });
+
+    it('invalidates a corrupt transaction', () => {
+      transaction.outputs[0].amount = 50000;
+      expect(Transaction.verifyTransaction(transaction)).toBe(false);
+    });
+    // });
+  });
+
+  describe('transacting with an amount that exceeds the balance', () => {
+    beforeEach(() => {
+      amount = 50000;
+      transaction = Transaction.newTransaction(wallet, recipient, amount);
+    });
+
+    it('does not create the transaction', () => {
+      expect(transaction).toEqual(undefined);
     });
   });
 

@@ -3,7 +3,7 @@ const { MINING_REWARD } = require('../config');
 
 class Transaction {
   constructor() {
-    this.index = ChainUtil.id();
+    this.id = ChainUtil.id();
     this.input = null;
     this.outputs = [];
   }
@@ -15,6 +15,7 @@ class Transaction {
 
     if (amount > senderOutput.amount) {
       console.log(`Amount: ${amount} exceeds balance.`);
+      return;
     }
 
     senderOutput.amount = senderOutput.amount - amount;
@@ -57,6 +58,11 @@ class Transaction {
   // sender is an entire wallet class
   // recipient is the public key of the recipient
   static normalTransaction(senderWallet, recipient, amount) {
+    if (amount > senderWallet.balance) {
+      console.log(`Amount: ${amount} exceeds balance.`);
+      return;
+    }
+
     // subtract the balance from the sender
     const senderAmount = senderWallet.balance - amount;
 

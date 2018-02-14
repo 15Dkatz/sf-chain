@@ -13,9 +13,10 @@ describe('TransactionPool', () => {
     transaction = wallet.createTransaction('r4nd-4dr355', 30, bc, tp);
   });
 
-  it('adds a transaction', () => {
-    expect(tp.transactions.find(t => t.index === transaction.index)).toEqual(transaction);
-  });
+  // unnecessary
+  // it('adds a transaction', () => {
+  //   expect(tp.transactions.find(t => t.id === transaction.id)).toEqual(transaction);
+  // });
 
   it('confirms that a transaction by the wallet exists', () => {
     expect(tp.existingTransaction(wallet.publicKey)).toEqual(transaction);
@@ -31,7 +32,7 @@ describe('TransactionPool', () => {
     transaction = transaction.update(wallet, 'foo-4ddr355', 40);
     tp.updateOrAddTransaction(transaction);
 
-    expect(tp.transactions.find(t => t.index === transaction.index)).toEqual(transaction);
+    expect(tp.transactions.find(t => t.id === transaction.id)).toEqual(transaction);
   });
 
   it('grabs valid transactions', () => {

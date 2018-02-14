@@ -6,16 +6,16 @@ class TransactionPool {
     this.transactions = [];
   }
 
-  addTransaction(transaction) {
-    this.transactions.push(transaction);
-  }
+  // addTransaction(transaction) {
+  //   this.transactions.push(transaction);
+  // }
 
   updateOrAddTransaction(transaction) {
     // if a transaction at the transaction index exists, replace it. Otherwise, push it
-    let transactionWithIndex = this.transactions.find(t => t.index === transaction.index);
+    let transactionWithId = this.transactions.find(t => t.id === transaction.id);
 
-    if (transactionWithIndex) {
-      this.transactions[this.transactions.indexOf(transactionWithIndex)] = transaction;
+    if (transactionWithId) {
+      this.transactions[this.transactions.indexOf(transactionWithId)] = transaction;
     } else {
       this.transactions.push(transaction);
     }

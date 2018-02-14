@@ -15,8 +15,6 @@
   Balances are recalculated at the start of every transaction.
   A balance can always be calculated with the calculateBalance functino.
  */
-
-const CryptoJS = require('crypto-js');
 const ChainUtil = require('../chain-util');
 const Transaction = require('./transaction');
 const { INITIAL_BALANCE } = require('../config');
@@ -24,19 +22,12 @@ const { INITIAL_BALANCE } = require('../config');
 class Wallet {
   constructor() {
     this.balance = INITIAL_BALANCE;
-    this.keyPair = null;
-    this.publicKey = null; // address
-
-    this.generateKeys();
-  }
-
-  generateKeys() {
     this.keyPair = ChainUtil.genKeyPair();
-    this.publicKey = this.keyPair.getPublic().encode('hex');
+    this.publicKey = this.keyPair.getPublic().encode('hex'); // address
   }
 
-  sign(messageHash) {
-    return this.keyPair.sign(messageHash);
+  sign(dataHash) {
+    return this.keyPair.sign(dataHash);
   }
 
   /**
@@ -57,7 +48,7 @@ class Wallet {
       transaction.update(this, recipient, amount);
     } else {
       transaction = Transaction.normalTransaction(this, recipient, amount);
-      transactionPool.addTransaction(transaction);
+      transactionPool.updateOrAddTransaction(transaction);
     }
 
     return transaction;
@@ -106,8 +97,8 @@ class Wallet {
 
   toString() {
     return `Wallet -
-      publicKey : ${this.publicKey.toString().substring(0, 32)}
-      balance   : ${this.balance.toString().substring(0, 32)}`
+      publicKey : ${this.publicKey.toString()}
+      balance   : ${this.balance}`
   }
 }
 
