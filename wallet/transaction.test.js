@@ -38,6 +38,26 @@ describe('Transaction', () => {
       transaction.outputs[0].amount = 50000;
       expect(Transaction.verifyTransaction(transaction)).toBe(false);
     });
+
+    describe('and updating the transaction', () => {
+      let nextAmount, nextRecipient;
+
+      beforeEach(() => {
+        nextAmount = 20;
+        nextRecipient = 'n3xt-4ddr355';
+        transaction = transaction.update(wallet, nextRecipient, nextAmount);
+      });
+
+      it('outputs an increased amount subtracted from the sender', () => {
+        expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
+          .toEqual(wallet.balance - amount - nextAmount);
+      });
+
+      it('outputs an amount for the next recipient', () => {
+        expect(transaction.outputs.find(output => output.address === nextRecipient).amount)
+          .toEqual(nextAmount);
+      });
+    });
   });
 
   describe('transacting with an amount that exceeds the balance', () => {
@@ -50,16 +70,6 @@ describe('Transaction', () => {
       expect(transaction).toEqual(undefined);
     });
   });
-
-  // TODO: it/describes('updates the transaction', () => {});
-  // This is covered in the wallet test
-  // desribe('updating a transaction', () => {
-  //   beforeEach(() => {
-  //     transaction = transaction.update(wallet, 'new-4ddr355', 20);
-  //   });
-
-  //   it('')
-  // });
 
   describe('creating a reward transaction', () => {
     beforeEach(() => {
