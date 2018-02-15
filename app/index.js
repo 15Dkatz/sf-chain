@@ -6,16 +6,16 @@ HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 npm r
 const express = require('express');
 const bodyParser = require('body-parser');
 const Blockchain = require('../blockchain');
-const TransactionPool = require('../wallet/transaction-pool');
 const Wallet = require('../wallet');
+const TransactionPool = require('../wallet/transaction-pool');
 const P2pServer = require('./p2p-server');
 const Miner = require('./miner');
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 
 const bc = new Blockchain();
-const tp = new TransactionPool();
 const wallet = new Wallet();
+const tp = new TransactionPool();
 const app = express();
 const p2pServer = new P2pServer(bc, tp, wallet);
 const miner = new Miner(bc, tp, wallet, p2pServer);

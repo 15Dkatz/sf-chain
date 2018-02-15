@@ -17,11 +17,10 @@ const MESSAGE_TYPES = {
 };
 
 class P2pServer {
-  constructor(blockchain, transactionPool, wallet) {
+  constructor(blockchain, transactionPool) {
     this.sockets = [];
     this.blockchain = blockchain;
     this.transactionPool = transactionPool;
-    this.wallet = wallet;
   }
 
   listen() {
@@ -47,11 +46,6 @@ class P2pServer {
   }
 
   sendChain(socket) {
-    /*
-      how does the send() method actually work? https://github.com/websockets/ws/blob/master/doc/ws.md
-      does it broadcat to all connected to sockets...? Or just one...?
-      If so, why is there a constructed broadcast function in the README?
-    */
     socket.send(JSON.stringify({ type: MESSAGE_TYPES.chain, chain: this.blockchain.chain }));
   }
 
@@ -80,16 +74,6 @@ class P2pServer {
       }
     });
   }
-
-  // errorHandler(socket) {
-  //   const closeConnection = (socket) => {
-  //     console.log(`Connection failed to peer: ${socket.url}`);
-  //     this.sockets.splice(this.sockets.indexOf(socket), 1);
-  //   };
-
-  //   socket.on('close', () => closeConnection(socket));
-  //   socket.on('error', () => closeConnection(socket));
-  // }
 
   syncChains() {
     this.sockets.forEach(socket => this.sendChain(socket));
