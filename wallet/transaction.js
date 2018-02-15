@@ -47,7 +47,7 @@ class Transaction {
     return verified;
   }
 
-  static newTransaction(senderWallet, outputs) {
+  static transactionWithOutputs(senderWallet, outputs) {
     const transaction = new this();
     transaction.outputs.push(...outputs);
     Transaction.signTransaction(transaction, senderWallet);
@@ -57,7 +57,7 @@ class Transaction {
 
   // sender is an entire wallet class
   // recipient is the public key of the recipient
-  static normalTransaction(senderWallet, recipient, amount) {
+  static newTransaction(senderWallet, recipient, amount) {
     if (amount > senderWallet.balance) {
       console.log(`Amount: ${amount} exceeds balance.`);
       return;
@@ -67,14 +67,14 @@ class Transaction {
     const senderAmount = senderWallet.balance - amount;
 
     // TODO: add transaction fee
-    return Transaction.newTransaction(senderWallet, [
+    return Transaction.transactionWithOutputs(senderWallet, [
       { amount: senderAmount, address: senderWallet.publicKey },
       { amount, address: recipient }
     ]);
   }
 
   static rewardTransaction(minerWallet) {
-    return Transaction.newTransaction(minerWallet, [{
+    return Transaction.transactionWithOutputs(minerWallet, [{
       amount: MINING_REWARD, address: minerWallet.publicKey
     }]);
   }

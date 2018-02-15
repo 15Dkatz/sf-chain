@@ -28,7 +28,8 @@ class TransactionPool {
 
   validTransactions() {
     // make sure the input amount of each transaction is equal to the output amounts
-    const validTransactions = this.transactions.filter(transaction => {
+    // const validTransactions = this.transactions.filter(transaction => {
+    return this.transactions.filter(transaction => {
       const outputTotal = transaction.outputs.reduce((total, output) => {
         return total + output.amount;
       }, 0);
@@ -45,8 +46,7 @@ class TransactionPool {
 
       return transaction;
     });
-
-    return validTransactions;
+    // return validTransactions;
   }
 
   clear() {

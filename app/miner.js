@@ -15,13 +15,14 @@ class Miner {
   // It connects the transactionPool, the blockchain, and soon the p2pServer
   mine() {
     const validTransactions = this.transactionPool.validTransactions();
-    // place a reward transaction at the front
+    // include a reward transaction for the miner
     validTransactions.unshift(Transaction.rewardTransaction(this.wallet));
-
+    // create a block consisting of the valid transactions
     const block = this.blockchain.addBlock(validTransactions);
+    // synchronize chains in the peer-to-peer server
     this.p2pServer.syncChains();
-    // once the block is added, clear the transactionPool, and broadcast a clear allowing everyone to reset.
-    // After all, shouldn't everyone get an updated transaction pool list?
+    // clear the transaction pool
+    // broadcast to every miner to clear their transaction pools
     this.transactionPool.clear();
     this.p2pServer.broadcastClearTransactions();
 
